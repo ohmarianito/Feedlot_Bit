@@ -1,0 +1,28 @@
+<!-- HEREDA TODO DE BASE.html -->
+{% extends 'base.html'  %}
+
+
+{% block head %}
+
+{% endblock %}
+
+
+{% block body %}
+    <!-- LOS COLORES ESTAN PARA IDENTIFICAR LOS DIV SE PUEDEN SACAR HAY Q SACARLOS DESPUES-->
+    <div class="container-fluid" style="margin-top: 2%;">
+        <div class="row" style="background-color:lavender;">
+            <div class="col-md-6 text-center" style="background-color:lightgray; margin-top: 6%;">
+                <label for="staticId" class="">Nombre animal: Martin</label><br>
+                <label for="staticId" class="">Edad: 35 meses</label><br>
+                <label for="staticId" class="">Peso: 105kg</label><br>
+                <label for="staticId" class="">Origen: de lo profundo</label><br>
+                <label for="staticId" class="">Sexo: poco</label><br>
+                <label for="staticId" class="">Bebe: Si</label><br>
+                <label for="staticId" class="">Fecha caducidad: jugando los descuentos</label><br>
+            </div>
+            <div class="col-sm-5 col-sm-offset-2 col-md-6 col-md-offset-0" style="background-color:lightcyan;">
+                <img src=" {{ url_for('static', filename='grafica.png') }} " alt="Historia del animal">
+            </div>
+        </div>
+    </div>
+{% endblock %}

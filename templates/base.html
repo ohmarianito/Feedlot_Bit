@@ -20,10 +20,66 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 
+    <!-- Hide Navbar -->
+    <script src="static\js\jquery.bootstrap-autohidingnavbar.js"></script>
+    <script>$(".navbar-fixed-top").autoHidingNavbar();</script>
+
+    <!-- ESTILOS PROPIOS DEL MENU -->
+    <style type="text/css">
+        .out:hover,
+        .out:active {
+            color: red !important;
+        }
+
+        .menuInicio:hover,
+        .menuInicio:active {
+            color: red !important;
+        }
+
+        ul.nav li.active a {
+            color: black !important;
+        }
+    </style>
     {% block head %} {% endblock%}
 </head>
 
 <body>
+    <!-- MENU se consulta si se muestra o no por la pantalla de login -->
+    <!-- navbar navbar-default navbar-fixed-top menu de fondo blanco -->
+    <nav id="menu" class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/inicio">FeedLot</a>
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class=""><a class="menuInicio" href="/inicio">Home <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li><a class="menuInicio" href="/historiaAnimal">TEST DE GRAFICA</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><a class="menuInicio" href="#">Animal2</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><a class="menuInicio" href="#">Animal3</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a class="out" href="/salir">Salir</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     {% block body %} {% endblock %}
 </body>
 

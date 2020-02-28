@@ -1,5 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from flask_mysqldb import MySQL
+from graph import makeGraph
+
 
 # Objeto Flask
 app = Flask(__name__)
@@ -22,7 +24,7 @@ mysql = MySQL(app)
 def index():
     print("INICIANDO:")
     if 'nombre' in session:
-        return render_template('index.html')
+        return render_template('home.html')
     else:
         return render_template('login.html')
 
@@ -30,7 +32,7 @@ def index():
 @app.route('/inicio')
 def inicio():
     if 'nombre' in session:
-        return render_template('index.html')
+        return render_template('home.html')
     else:
         return render_template('login.html')
 
@@ -84,7 +86,7 @@ def ingresar():
         # Obtener los datos
         correo = request.form['emailLogin']
         password = request.form['passwordLogin']
-        print("INGRESANDO:")
+        print("LOS DATOS INGRESADOS SON:")
         print(correo + " " + password)
 
         # Crear cursor
@@ -123,6 +125,16 @@ def ingresar():
             # No existe enviar msj
             flash("El correo no existe", "alert-warning")
             return render_template("login.html")
+
+# Pagina ingreso usuario
+@app.route('/historiaAnimal', methods=["GET", "POST"])
+def historiaAnimal():
+    if 'nombre' in session:
+        print("HISTORIA DEL ANIMAL:")
+        makeGraph()
+        return render_template("animalHistory.html")
+    else:
+        return render_template('login.html')
 
 
 @app.route("/salir")
