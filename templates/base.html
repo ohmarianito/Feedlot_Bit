@@ -8,7 +8,13 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) VA PRIMERO JQUERY PARA QUE ANDE EL MENU-->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
     <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
     <!-- Optional theme -->
@@ -16,9 +22,6 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 
     <!-- Hide Navbar -->
     <script src="static\js\jquery.bootstrap-autohidingnavbar.js"></script>
@@ -40,6 +43,22 @@
             color: black !important;
         }
     </style>
+    <script type="text/javascript">
+        function mostrarMensaje(exitoErrorClass, msj) {
+            $('#idMensajeError').empty();
+            $('#idMensajeError').addClass(exitoErrorClass);
+            $('#idMensajeError').append(msj);
+            $('#idMensajeError').show();
+        }
+        function ocultarMensaje() {
+            $('#idMensajeError').hide();
+        }
+        function RemoveLastRowFromTable(obj) {
+            obj = document.getElementById(obj);
+            rws = obj.getElementsByTagName('TR');
+            obj.removeChild(rws[rws.length - 1]);
+        }
+    </script>
     {% block head %} {% endblock%}
 </head>
 
@@ -63,9 +82,30 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class=""><a class="menuInicio" href="/inicio">Home <span
-                                class="sr-only">(current)</span></a>
+                    <li class=""><a class="menuInicio" href="/inicio">Home <span class="sr-only">(current)</span></a>
                     </li>
+
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle menuInicio" data-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">Gestión <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li role="separator" class="divider"></li>
+                            <li><a class="menuInicio" href="/PrecioHistoria">Precio histórico</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a class="menuInicio" href="#">Another action</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a class="menuInicio" href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a class="menuInicio" href="#">Separated link</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a class="menuInicio" href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+
+
+
+
                     <li><a class="menuInicio" href="/historiaAnimal">TEST DE GRAFICA</a></li>
                 </ul>
                 <ul class="nav navbar-nav">

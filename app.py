@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, session, flash
+from flask import Flask, render_template, url_for, request, redirect, session, flash, json
 from flask_mysqldb import MySQL
 from graph import makeGraph
 
@@ -14,7 +14,6 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'feedlotdb'
-
 
 # Objeto MySQL
 mysql = MySQL(app)
@@ -50,7 +49,7 @@ def registrar():
         print(nombre + " " + correo + " " + password)
 
         # Preparar el query
-        sQuery = "INSERT INTO login (correo, password, nombre) VALUES (%s, %s, %s)"
+        sQuery = "INSERT INTO usuario (correo, password, nombre) VALUES (%s, %s, %s)"
 
         # Crear cursor
         cur = mysql.connection.cursor()
@@ -93,7 +92,7 @@ def ingresar():
         cur = mysql.connection.cursor()
 
         # Preparar el query
-        sQuery = "SELECT correo, password, nombre FROM login WHERE correo = %s"
+        sQuery = "SELECT correo, password, nombre FROM usuario WHERE correo = %s"
 
         # Ejecutar query
         cur.execute(sQuery, [correo])
@@ -135,6 +134,76 @@ def historiaAnimal():
         return render_template("animalHistory.html")
     else:
         return render_template('login.html')
+
+# Pagina Precio historico listar todo
+@app.route('/PrecioHistoria', methods=["GET", "POST"])
+def PrecioHistoria():
+    if 'nombre' in session:
+        print("HISTORIA DEL PRECIO:")
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM precioreferencia ORDER BY precioReferenciaFecha DESC')
+        data = cur.fetchall()
+        cur.close()
+        return render_template("priceReference.html", historias = data)
+    else:
+        return render_template('login.html')
+
+# Pagina Precio historico add/update
+@app.route('/AddPrecioHistoria', methods=["POST"])
+def AddPrecioHistoria():
+    print("HISTORIA DEL PRECIO ADD")
+    if 'nombre' in session:
+        fecha = request.form['fechaHistorial']
+        precio = request.form['precioHistorial']
+
+        print(fecha)
+        print(precio)
+        # Crear cursor
+        cur = mysql.connection.cursor()
+
+        # Preparar el query y ejecutar query
+        cur.execute("INSERT INTO precioreferencia (precioReferenciaFecha, precioReferenciaPrecio) VALUES (%s, %s)", (fecha, precio))
+        mysql.connection.commit()
+        
+        #Cerramos Conexion
+        cur.close()
+
+        flash("El registro se ingreso correctamente", "alert-success")
+        return  redirect(url_for('PrecioHistoria'))
+    else:
+        return render_template('login.html')
+
+# Pagina Precio historico delete
+@app.route('/DeletePrecioHistoria/<string:id>')
+def DeletePrecioHistoria(id):
+    print("HISTORIA DEL PRECIO DELETE")
+    if 'nombre' in session:
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM precioreferencia WHERE precioReferenciaId = {0}'.format(id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El registro se elimino correctamente", "alert-success")
+        return  redirect(url_for('PrecioHistoria'))
+    else:
+        return render_template('login.html')     
+
+# Pagina Precio historico delete
+@app.route('/UpdatePrecioHistoria', methods=["POST"])
+def UpdatePrecioHistoria():
+    print("HISTORIA DEL PRECIO UPDATE")
+    if 'nombre' in session:
+        id = request.form['idHistorialModal']
+        fecha = request.form['fechaHistorialModal']
+        precio = request.form['precioHistorialModal']
+
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE precioreferencia SET precioReferenciaFecha = %s, precioReferenciaPrecio = %s WHERE precioReferenciaId = %s', (fecha, precio, id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El registro se actualizo correctamente", "alert-success")
+        return  redirect(url_for('PrecioHistoria'))
+    else:
+        return render_template('login.html')             
 
 
 @app.route("/salir")
