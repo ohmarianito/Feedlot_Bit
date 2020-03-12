@@ -110,21 +110,15 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var today = new Date();
-        var date = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
-        $('#fechaHistorial').val(date.toString())
-
-
         //borro msj
         $('.message a').click(function () {
             $('#idMensajeError').hide();
         });
     });
-    function myFunction(id, fecha, precio) {
-        $('#idHistorialModal').val(id);
-        $('#precioHistorialModal').val(precio);
-        $('#fechaHistorialModal').val(fecha);
-    }
+    function myFunction(id, nombre) {
+        $('#idTipoRacionModal').val(id);
+        $('#nombreTipoRacionModal').val(nombre);
+    }   
 </script>
 {% endblock %}
 
@@ -132,11 +126,11 @@
 <div class="container">
     <div class="table-wrapper">
         <!-- FORM INGRESO -->
-        <form action="/AddPrecioHistoria" method="POST">
+        <form action="/AddTipoRacion" method="POST">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h2>Historial de <b>Precios</b></h2>
+                        <h2>Tipos de <b>ración</b></h2>
                     </div>
                 </div>
             </div>
@@ -144,7 +138,7 @@
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h4>Nuevo registro:</h4>
+                        <h4>Nueva ración:</h4>
                     </div>
                 </div>
             </div>
@@ -152,19 +146,17 @@
                 <thead>
                     <tr>
                         <th style="display:none;">ID</th>
-                        <th>Fecha</th>
-                        <th>Precio U$$/$</th>
+                        <th>Nombre del tipo de ración</th>
                         <th>operación</th>
                     </tr>
                 </thead>
-                <tbody id="tablaHistoricoPrecio">
+                <tbody id="tablaTipoAnimal">
                     <tr>
-                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idHistorial"
+                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idTipoRacion"
                                 readonly value=""></td>
-                        <td><input type="text" class="form-control" name="fechaHistorial" id="fechaHistorial" readonly
+                        <td><input type="text" class="form-control" name="nombreTipoRacion" id="nombreTipoRacion" 
                                 value="">
                         </td>
-                        <td><input type="text" class="form-control" name="precioHistorial" id="precioHistorial"></td>
                         <td><button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
                         </td>
                     </tr>
@@ -193,7 +185,7 @@
         <div class="table-title">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4>Lista de registros:</h4>
+                    <h4>Lista de raciones:</h4>
                 </div>
             </div>
         </div>
@@ -202,25 +194,23 @@
             <thead>
                 <tr>
                     <th style="display:none;">ID</th>
-                    <th>Fecha</th>
-                    <th>Precio U$$/$</th>
+                    <th>Nombre del tipo de ración</th>
                     <th>Operaciones</th>
                 </tr>
             </thead>
-            <tbody id="tablaHistoricoPrecio">
-                {% for historia in historias %}
+            <tbody id="TablaTipoAnimal">
+                {% for racion in raciones %}
                 <tr>
-                    <td style="display:none;"><input type="text" class="form-control" name="id"
-                            readonly>{{historia.0}}</td>
-                    <td>{{historia.1}}</td>
-                    <td>{{historia.2}}</td>
+                    <td style="display:none;"><input type="text" class="form-control" name="id" readonly>{{racion.0}}
+                    </td>
+                    <td>{{racion.1}}</td>
                     <td>
                         <!--<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>-->
-                        <a id="{{historia.0}}"
-                            onclick="myFunction('{{historia.0}}', '{{historia.1}}', '{{historia.2}}')"
-                             class="edit" title="Edit" data-toggle="modal"
-                            data-target="#myModal"><i class="material-icons">&#xE254;</i></a>
-                        <a href="/DeletePrecioHistoria/{{historia.0}}" class="delete" title="Delete"><i
+                        <a id="{{racion.0}}"
+                            onclick="myFunction('{{racion.0}}', '{{racion.1}}')" class="edit"
+                            title="Edit" data-toggle="modal" data-target="#myModal"><i
+                                class="material-icons">&#xE254;</i></a>
+                        <a href="/DeleteTipoRacion/{{racion.0}}" class="delete" title="Delete"><i
                                 class="material-icons">&#xE872;</i></a>
                     </td>
                 </tr>
@@ -249,25 +239,21 @@
                 </div>
 
                 <!-- FORM INGRESO -->
-                <form action="/UpdatePrecioHistoria" method="POST">
+                <form action="/UpdateTipoRacion" method="POST">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th style="display:none;">ID</th>
-                                <th>Fecha</th>
-                                <th>Precio U$$/$</th>
+                                <th>Nombre del tipo de ración</th>
                                 <th>operación</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaHistoricoPrecio">
+                        <tbody id="tablaTiporacios">
                             <tr>
-                                <td style="display:none;"><input type="text" class="form-control" name="idHistorialModal"
-                                        id="idHistorialModal" readonly value=""></td>
-                                <td><input type="date" class="form-control" name="fechaHistorialModal"
-                                        id="fechaHistorialModal">
-                                </td>
-                                <td><input type="text" class="form-control" name="precioHistorialModal"
-                                        id="precioHistorialModal">
+                                <td style="display:none;"><input type="text" class="form-control"
+                                        name="idTipoRacionModal" id="idTipoRacionModal" readonly value=""></td>
+                                <td><input type="text" class="form-control" name="nombreTipoRacionModal"
+                                        id="nombreTipoRacionModal">
                                 </td>
                                 <td><button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
                                             class="fa fa-plus"></i>
@@ -275,7 +261,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table> 
                 </form>
 
                 <div class="modal-footer">
@@ -288,10 +274,5 @@
         </div>
     </div>
 
-</div>
-<div class="container">
-    <div class="table-wrapper">
-        PONER UNA GRAFICA DE HISTORIAL SI SE PUEDE Y DA EL TIEMPo....
-    </div>
 </div>
 {% endblock %}

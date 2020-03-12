@@ -125,7 +125,7 @@ def ingresar():
             flash("El correo no existe", "alert-warning")
             return render_template("login.html")
 
-# Pagina ingreso usuario
+# Pagina historia animal
 @app.route('/historiaAnimal', methods=["GET", "POST"])
 def historiaAnimal():
     if 'nombre' in session:
@@ -135,6 +135,8 @@ def historiaAnimal():
     else:
         return render_template('login.html')
 
+
+#################### PRECIO HISTORICO #################### 
 # Pagina Precio historico listar todo
 @app.route('/PrecioHistoria', methods=["GET", "POST"])
 def PrecioHistoria():
@@ -148,7 +150,7 @@ def PrecioHistoria():
     else:
         return render_template('login.html')
 
-# Pagina Precio historico add/update
+# Pagina Precio historico add
 @app.route('/AddPrecioHistoria', methods=["POST"])
 def AddPrecioHistoria():
     print("HISTORIA DEL PRECIO ADD")
@@ -187,7 +189,7 @@ def DeletePrecioHistoria(id):
     else:
         return render_template('login.html')     
 
-# Pagina Precio historico delete
+# Pagina Precio historico Update
 @app.route('/UpdatePrecioHistoria', methods=["POST"])
 def UpdatePrecioHistoria():
     print("HISTORIA DEL PRECIO UPDATE")
@@ -200,12 +202,219 @@ def UpdatePrecioHistoria():
         cur.execute('UPDATE precioreferencia SET precioReferenciaFecha = %s, precioReferenciaPrecio = %s WHERE precioReferenciaId = %s', (fecha, precio, id))
         mysql.connection.commit()
         cur.close()
-        flash("El registro se actualizo correctamente", "alert-success")
+        flash("El registro se actualizó correctamente", "alert-success")
         return  redirect(url_for('PrecioHistoria'))
     else:
         return render_template('login.html')             
 
 
+
+#################### PARAMETROS DEL SISTEMA #################### 
+# Pagina Parametros listar todo
+@app.route('/Parametros', methods=["GET", "POST"])
+def Parametros():
+    if 'nombre' in session:
+        print("PARAMETROS:")
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM parametro')
+        data = cur.fetchall()
+        cur.close()
+        return render_template("parametros.html", parametros = data)
+    else:
+        return render_template('login.html')
+
+# Pagina Parametro add
+@app.route('/AddParametro', methods=["POST"])
+def AddParametro():
+    print("PARAMETRO ADD")
+    if 'nombre' in session:
+        nombre = request.form['nombreParametro']
+        valor = request.form['valorParametro']
+
+        # Crear cursor
+        cur = mysql.connection.cursor()
+
+        # Preparar el query y ejecutar query
+        cur.execute("INSERT INTO parametro (parametroNom, parametroValor) VALUES (%s, %s)", (nombre, valor))
+        mysql.connection.commit()
+        
+        #Cerramos Conexion
+        cur.close()
+
+        flash("El parámetro se ingreso correctamente", "alert-success")
+        return  redirect(url_for('Parametros'))
+    else:
+        return render_template('login.html')
+
+# Pagina Precio historico delete
+@app.route('/DeleteParametro/<string:id>')
+def DeleteParametro(id):
+    print("PARAMETRO DELETE")
+    if 'nombre' in session:
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM parametro WHERE parametroId = {0}'.format(id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El parámetro se elimino correctamente", "alert-success")
+        return  redirect(url_for('Parametros'))
+    else:
+        return render_template('login.html')     
+
+# Pagina Precio historico Update
+@app.route('/UpdateParametro', methods=["POST"])
+def UpdateParametro():
+    print("PARAMETRO UPDATE")
+    if 'nombre' in session:
+        id = request.form['idParametroModal']
+        nombre = request.form['nombreParametroModal']
+        valor = request.form['valorParametrolModal']
+
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE parametro SET parametroNom = %s, parametroValor = %s WHERE parametroId = %s', (nombre, valor, id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El parámetro se actualizó correctamente", "alert-success")
+        return  redirect(url_for('Parametros'))
+    else:
+        return render_template('login.html')              
+
+#################### TIPOS DE ANIMAL #################### 
+# Pagina TIPO ANIMAL listar todo
+@app.route('/TipoAnimal', methods=["GET", "POST"])
+def TipoAnimal():
+    if 'nombre' in session:
+        print("TIPO ANIMAL:")
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM tipoanimal')
+        data = cur.fetchall()
+        cur.close()
+        return render_template("tipoAnimal.html", animales = data)
+    else:
+        return render_template('login.html')
+
+# Pagina TIPO ANIMAL add
+@app.route('/AddTipoAnimal', methods=["POST"])
+def AddTipoAnimal():
+    print("TIPO ANIMAL ADD")
+    if 'nombre' in session:
+        nombre = request.form['nombreTipoAnimal']
+
+        # Crear cursor
+        cur = mysql.connection.cursor()
+        # Preparar el query y ejecutar query
+        query = "INSERT INTO tipoanimal (tipoAnimalNom) VALUES ('" + nombre + "')"
+        cur.execute(query)
+        mysql.connection.commit()
+        
+        #Cerramos Conexion
+        cur.close()
+
+        flash("El tipo de animal se ingreso correctamente", "alert-success")
+        return  redirect(url_for('TipoAnimal'))
+    else:
+        return render_template('login.html')
+
+# Pagina TIPO ANIAMAL delete
+@app.route('/DeleteTipoAnimal/<string:id>')
+def DeleteTipoAnimal(id):
+    print("TIPO ANIMAL DELETE")
+    if 'nombre' in session:
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM tipoanimal WHERE tipoAnimalId = {0}'.format(id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El tipo de animal se elimino correctamente", "alert-success")
+        return  redirect(url_for('TipoAnimal'))
+    else:
+        return render_template('login.html')     
+
+# Pagina Precio historico Update
+@app.route('/UpdateTipoAnimal', methods=["POST"])
+def UpdateTipoAnimal():
+    print("TIPO ANIMAL UPDATE")
+    if 'nombre' in session:
+        id = request.form['idTipoAnimalModal']
+        nombre = request.form['nombreTipoAnimalModal']
+
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE tipoanimal SET tipoAnimalNom = %s WHERE tipoAnimalId = %s', (nombre, id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El tipo de animal se actualizó correctamente", "alert-success")
+        return  redirect(url_for('TipoAnimal'))
+    else:
+        return render_template('login.html')         
+
+
+#################### TIPOS DE RACION #################### 
+# Pagina TIPO ANIMAL listar todo
+@app.route('/TipoRacion', methods=["GET", "POST"])
+def TipoRacion():
+    if 'nombre' in session:
+        print("TIPO RACION:")
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM tiporacion')
+        data = cur.fetchall()
+        cur.close()
+        return render_template("tipoRacion.html", raciones = data)
+    else:
+        return render_template('login.html')
+
+# Pagina TIPO ANIMAL add
+@app.route('/AddTipoRacion', methods=["POST"])
+def AddTipoRacion():
+    print("TIPO RACION ADD")
+    if 'nombre' in session:
+        nombre = request.form['nombreTipoRacion']
+
+        # Crear cursor
+        cur = mysql.connection.cursor()
+        # Preparar el query y ejecutar query
+        query = "INSERT INTO tiporacion (TipoRacionNom) VALUES ('" + nombre + "')"
+        cur.execute(query)
+        mysql.connection.commit()
+        
+        #Cerramos Conexion
+        cur.close()
+
+        flash("El tipo de ración se ingreso correctamente", "alert-success")
+        return  redirect(url_for('TipoRacion'))
+    else:
+        return render_template('login.html')
+
+# Pagina TIPO ANIAMAL delete
+@app.route('/DeleteTipoRacion/<string:id>')
+def DeleteTipoRacion(id):
+    print("TIPO RACION DELETE")
+    if 'nombre' in session:
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM tiporacion WHERE TipoRacionid = {0}'.format(id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El tipo de ración se elimino correctamente", "alert-success")
+        return  redirect(url_for('TipoRacion'))
+    else:
+        return render_template('login.html')     
+
+# Pagina Precio historico Update
+@app.route('/UpdateTipoRacion', methods=["POST"])
+def UpdateTipoRacion():
+    print("TIPO RACION UPDATE")
+    if 'nombre' in session:
+        id = request.form['idTipoRacionModal']
+        nombre = request.form['nombreTipoRacionModal']
+
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE tiporacion SET TipoRacionNom = %s WHERE TipoRacionid = %s', (nombre, id))
+        mysql.connection.commit()
+        cur.close()
+        flash("El tipo de ración se actualizó correctamente", "alert-success")
+        return  redirect(url_for('TipoRacion'))
+    else:
+        return render_template('login.html')         
+
+
+#################### SALIR #################### 
 @app.route("/salir")
 def salir():
     print("SALIENDO:")
