@@ -1,6 +1,11 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash, json
-from flask_mysqldb import MySQL
+from mysqlDb import mysql
 from graph import makeGraph
+from login import *
+from rationType import *
+from historicPrice import *
+from systemParameter import *
+from animalType import *
 
 
 # Objeto Flask
@@ -16,7 +21,7 @@ app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'feedlotdb'
 
 # Objeto MySQL
-mysql = MySQL(app)
+mysql.init_app(app)
 
 # Pagina Login
 @app.route('/')
@@ -46,34 +51,7 @@ def registrar():
         nombre = request.form['usernameRegister']
         correo = request.form['emailRegister']
         password = request.form['passwordRegister']
-        print(nombre + " " + correo + " " + password)
-
-        # Preparar el query
-        sQuery = "INSERT INTO usuario (correo, password, nombre) VALUES (%s, %s, %s)"
-
-        # Crear cursor
-        cur = mysql.connection.cursor()
-
-        # Ejecutar query
-        cur.execute(sQuery, (correo, password, nombre))
-
-        try:
-            # Commit
-            mysql.connection.commit()
-
-            # Registrar en session
-            session['nombre'] = nombre
-            session['correo'] = correo
-        except:
-            # limpiar session
-            print('ERRORR')
-
-        cur.close()
-        session.clear()
-        # Redireccion
-        flash("Usuario registrado correctamente", "alert-success")
-        return render_template('login.html')
-
+        return registrarUsuario(nombre, correo, password)
 
 # Pagina ingreso usuario
 @app.route('/ingresar', methods=["GET", "POST"])
@@ -85,68 +63,24 @@ def ingresar():
         # Obtener los datos
         correo = request.form['emailLogin']
         password = request.form['passwordLogin']
-        print("LOS DATOS INGRESADOS SON:")
-        print(correo + " " + password)
-
-        # Crear cursor
-        cur = mysql.connection.cursor()
-
-        # Preparar el query
-        sQuery = "SELECT correo, password, nombre FROM usuario WHERE correo = %s"
-
-        # Ejecutar query
-        cur.execute(sQuery, [correo])
-
-        # Obtener los datos
-        usuario = cur.fetchone()
-        cur.close()
-
-        # Verificar los datos
-        if(usuario != None):
-            correoDB = usuario[0]
-            passwordDB = usuario[1]
-            userDB = usuario[2]
-            print("Correo: " + correoDB)
-            print("Pass: " + passwordDB)
-            print("Nombre: " + userDB)
-            if (password == passwordDB):
-                # Registrar en session
-                session['nombre'] = userDB
-                session['correo'] = correoDB
-                # Redireccion todo OK
-                return redirect(url_for('inicio'))
-            else:
-                # Erro al password, msj error
-                flash("El password no es correcto", "alert-warning")
-                return render_template("login.html")
-
-        else:
-            # No existe enviar msj
-            flash("El correo no existe", "alert-warning")
-            return render_template("login.html")
+        return ingresoUsuario(correo, password)
 
 # Pagina historia animal
 @app.route('/historiaAnimal', methods=["GET", "POST"])
 def historiaAnimal():
     if 'nombre' in session:
-        print("HISTORIA DEL ANIMAL:")
         makeGraph()
         return render_template("animalHistory.html")
     else:
         return render_template('login.html')
 
 
-#################### PRECIO HISTORICO #################### 
+#################### PRECIO HISTORICO ####################
 # Pagina Precio historico listar todo
 @app.route('/PrecioHistoria', methods=["GET", "POST"])
 def PrecioHistoria():
     if 'nombre' in session:
-        print("HISTORIA DEL PRECIO:")
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM precioreferencia ORDER BY precioReferenciaFecha DESC')
-        data = cur.fetchall()
-        cur.close()
-        return render_template("priceReference.html", historias = data)
+        return precioHistoriaInicio()
     else:
         return render_template('login.html')
 
@@ -157,21 +91,7 @@ def AddPrecioHistoria():
     if 'nombre' in session:
         fecha = request.form['fechaHistorial']
         precio = request.form['precioHistorial']
-
-        print(fecha)
-        print(precio)
-        # Crear cursor
-        cur = mysql.connection.cursor()
-
-        # Preparar el query y ejecutar query
-        cur.execute("INSERT INTO precioreferencia (precioReferenciaFecha, precioReferenciaPrecio) VALUES (%s, %s)", (fecha, precio))
-        mysql.connection.commit()
-        
-        #Cerramos Conexion
-        cur.close()
-
-        flash("El registro se ingreso correctamente", "alert-success")
-        return  redirect(url_for('PrecioHistoria'))
+        return precioHistoriaAdd(fecha, precio)
     else:
         return render_template('login.html')
 
@@ -180,46 +100,29 @@ def AddPrecioHistoria():
 def DeletePrecioHistoria(id):
     print("HISTORIA DEL PRECIO DELETE")
     if 'nombre' in session:
-        cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM precioreferencia WHERE precioReferenciaId = {0}'.format(id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El registro se elimino correctamente", "alert-success")
-        return  redirect(url_for('PrecioHistoria'))
+        return precioHistoriaDelete(id)
     else:
-        return render_template('login.html')     
+        return render_template('login.html')
 
 # Pagina Precio historico Update
 @app.route('/UpdatePrecioHistoria', methods=["POST"])
 def UpdatePrecioHistoria():
     print("HISTORIA DEL PRECIO UPDATE")
     if 'nombre' in session:
-        id = request.form['idHistorialModal']
+        idPrecioHistoria = request.form['idHistorialModal']
         fecha = request.form['fechaHistorialModal']
         precio = request.form['precioHistorialModal']
-
-        cur = mysql.connection.cursor()
-        cur.execute('UPDATE precioreferencia SET precioReferenciaFecha = %s, precioReferenciaPrecio = %s WHERE precioReferenciaId = %s', (fecha, precio, id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El registro se actualizó correctamente", "alert-success")
-        return  redirect(url_for('PrecioHistoria'))
+        return precioHistoriaUpdate(fecha, precio, idPrecioHistoria)
     else:
-        return render_template('login.html')             
+        return render_template('login.html')
 
 
-
-#################### PARAMETROS DEL SISTEMA #################### 
+#################### PARAMETROS DEL SISTEMA ####################
 # Pagina Parametros listar todo
 @app.route('/Parametros', methods=["GET", "POST"])
 def Parametros():
     if 'nombre' in session:
-        print("PARAMETROS:")
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM parametro')
-        data = cur.fetchall()
-        cur.close()
-        return render_template("parametros.html", parametros = data)
+        return parametroInicio()
     else:
         return render_template('login.html')
 
@@ -230,19 +133,7 @@ def AddParametro():
     if 'nombre' in session:
         nombre = request.form['nombreParametro']
         valor = request.form['valorParametro']
-
-        # Crear cursor
-        cur = mysql.connection.cursor()
-
-        # Preparar el query y ejecutar query
-        cur.execute("INSERT INTO parametro (parametroNom, parametroValor) VALUES (%s, %s)", (nombre, valor))
-        mysql.connection.commit()
-        
-        #Cerramos Conexion
-        cur.close()
-
-        flash("El parámetro se ingreso correctamente", "alert-success")
-        return  redirect(url_for('Parametros'))
+        return parametroAdd(nombre, valor)
     else:
         return render_template('login.html')
 
@@ -251,44 +142,28 @@ def AddParametro():
 def DeleteParametro(id):
     print("PARAMETRO DELETE")
     if 'nombre' in session:
-        cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM parametro WHERE parametroId = {0}'.format(id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El parámetro se elimino correctamente", "alert-success")
-        return  redirect(url_for('Parametros'))
+        return parametroDelete(id)
     else:
-        return render_template('login.html')     
+        return render_template('login.html')
 
 # Pagina Precio historico Update
 @app.route('/UpdateParametro', methods=["POST"])
 def UpdateParametro():
     print("PARAMETRO UPDATE")
     if 'nombre' in session:
-        id = request.form['idParametroModal']
+        idParametro = request.form['idParametroModal']
         nombre = request.form['nombreParametroModal']
         valor = request.form['valorParametrolModal']
-
-        cur = mysql.connection.cursor()
-        cur.execute('UPDATE parametro SET parametroNom = %s, parametroValor = %s WHERE parametroId = %s', (nombre, valor, id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El parámetro se actualizó correctamente", "alert-success")
-        return  redirect(url_for('Parametros'))
+        return parametroUpdate(nombre, valor, idParametro)
     else:
-        return render_template('login.html')              
+        return render_template('login.html')
 
-#################### TIPOS DE ANIMAL #################### 
+#################### TIPOS DE ANIMAL ####################
 # Pagina TIPO ANIMAL listar todo
 @app.route('/TipoAnimal', methods=["GET", "POST"])
 def TipoAnimal():
     if 'nombre' in session:
-        print("TIPO ANIMAL:")
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM tipoanimal')
-        data = cur.fetchall()
-        cur.close()
-        return render_template("tipoAnimal.html", animales = data)
+        return tipoAnimalInicio()
     else:
         return render_template('login.html')
 
@@ -298,19 +173,7 @@ def AddTipoAnimal():
     print("TIPO ANIMAL ADD")
     if 'nombre' in session:
         nombre = request.form['nombreTipoAnimal']
-
-        # Crear cursor
-        cur = mysql.connection.cursor()
-        # Preparar el query y ejecutar query
-        query = "INSERT INTO tipoanimal (tipoAnimalNom) VALUES ('" + nombre + "')"
-        cur.execute(query)
-        mysql.connection.commit()
-        
-        #Cerramos Conexion
-        cur.close()
-
-        flash("El tipo de animal se ingreso correctamente", "alert-success")
-        return  redirect(url_for('TipoAnimal'))
+        return tipoAnimalAdd(nombre)
     else:
         return render_template('login.html')
 
@@ -319,44 +182,28 @@ def AddTipoAnimal():
 def DeleteTipoAnimal(id):
     print("TIPO ANIMAL DELETE")
     if 'nombre' in session:
-        cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM tipoanimal WHERE tipoAnimalId = {0}'.format(id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El tipo de animal se elimino correctamente", "alert-success")
-        return  redirect(url_for('TipoAnimal'))
+        return tipoAnimalDelete(id)
     else:
-        return render_template('login.html')     
+        return render_template('login.html')
 
 # Pagina Precio historico Update
 @app.route('/UpdateTipoAnimal', methods=["POST"])
 def UpdateTipoAnimal():
     print("TIPO ANIMAL UPDATE")
     if 'nombre' in session:
-        id = request.form['idTipoAnimalModal']
+        idTipoAnimal = request.form['idTipoAnimalModal']
         nombre = request.form['nombreTipoAnimalModal']
-
-        cur = mysql.connection.cursor()
-        cur.execute('UPDATE tipoanimal SET tipoAnimalNom = %s WHERE tipoAnimalId = %s', (nombre, id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El tipo de animal se actualizó correctamente", "alert-success")
-        return  redirect(url_for('TipoAnimal'))
+        return tipoAnimalUpdate(nombre, idTipoAnimal)
     else:
-        return render_template('login.html')         
+        return render_template('login.html')
 
 
-#################### TIPOS DE RACION #################### 
+#################### TIPOS DE RACION ####################
 # Pagina TIPO ANIMAL listar todo
 @app.route('/TipoRacion', methods=["GET", "POST"])
 def TipoRacion():
     if 'nombre' in session:
-        print("TIPO RACION:")
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM tiporacion')
-        data = cur.fetchall()
-        cur.close()
-        return render_template("tipoRacion.html", raciones = data)
+        return racionTipoInicio()
     else:
         return render_template('login.html')
 
@@ -366,19 +213,7 @@ def AddTipoRacion():
     print("TIPO RACION ADD")
     if 'nombre' in session:
         nombre = request.form['nombreTipoRacion']
-
-        # Crear cursor
-        cur = mysql.connection.cursor()
-        # Preparar el query y ejecutar query
-        query = "INSERT INTO tiporacion (TipoRacionNom) VALUES ('" + nombre + "')"
-        cur.execute(query)
-        mysql.connection.commit()
-        
-        #Cerramos Conexion
-        cur.close()
-
-        flash("El tipo de ración se ingreso correctamente", "alert-success")
-        return  redirect(url_for('TipoRacion'))
+        return racionTipoAdd(nombre)
     else:
         return render_template('login.html')
 
@@ -387,14 +222,9 @@ def AddTipoRacion():
 def DeleteTipoRacion(id):
     print("TIPO RACION DELETE")
     if 'nombre' in session:
-        cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM tiporacion WHERE TipoRacionid = {0}'.format(id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El tipo de ración se elimino correctamente", "alert-success")
-        return  redirect(url_for('TipoRacion'))
+        return racionTipoDelete(id)
     else:
-        return render_template('login.html')     
+        return render_template('login.html')
 
 # Pagina Precio historico Update
 @app.route('/UpdateTipoRacion', methods=["POST"])
@@ -403,18 +233,12 @@ def UpdateTipoRacion():
     if 'nombre' in session:
         id = request.form['idTipoRacionModal']
         nombre = request.form['nombreTipoRacionModal']
-
-        cur = mysql.connection.cursor()
-        cur.execute('UPDATE tiporacion SET TipoRacionNom = %s WHERE TipoRacionid = %s', (nombre, id))
-        mysql.connection.commit()
-        cur.close()
-        flash("El tipo de ración se actualizó correctamente", "alert-success")
-        return  redirect(url_for('TipoRacion'))
+        return racionTipoUpdate(nombre, id)
     else:
-        return render_template('login.html')         
+        return render_template('login.html')
 
 
-#################### SALIR #################### 
+#################### SALIR ####################
 @app.route("/salir")
 def salir():
     print("SALIENDO:")
