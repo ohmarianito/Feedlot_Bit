@@ -116,8 +116,8 @@
         });
     });
     function myFunction(id, nombre) {
-        $('#idTipoRacionModal').val(id);
-        $('#nombreTipoRacionModal').val(nombre);
+        $('#idfrigorificoModal').val(id);
+        $('#nombrefrigorificoModal').val(nombre);
     }   
 </script>
 {% endblock %}
@@ -126,11 +126,11 @@
 <div class="container">
     <div class="table-wrapper">
         <!-- FORM INGRESO -->
-        <form action="/AddTipoRacion" method="POST">
+        <form action="/AddFrigorifico" method="POST">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h2>Tipos de <b>ración</b></h2>
+                        <h2>Frigorífico</h2>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h4>Nueva ración:</h4>
+                        <h4>Nuevo frigorífico:</h4>
                     </div>
                 </div>
             </div>
@@ -146,15 +146,15 @@
                 <thead>
                     <tr>
                         <th style="display:none;">ID</th>
-                        <th>Nombre del tipo de ración</th>
+                        <th>Nombre del frigorífico</th>
                         <th>operación</th>
                     </tr>
                 </thead>
-                <tbody id="tablaTipoAnimal">
+                <tbody id="tablaFrigorifico">
                     <tr>
-                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idTipoRacion"
+                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idFrigorifico"
                                 readonly value=""></td>
-                        <td><input type="text" class="form-control" name="nombreTipoRacion" id="nombreTipoRacion" 
+                        <td><input type="text" class="form-control" name="nombreFrigorifico" id="nombreFrigorifico" 
                                 value="">
                         </td>
                         <td><button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
@@ -185,7 +185,7 @@
         <div class="table-title">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4>Lista de raciones:</h4>
+                    <h4>Lista de frigoríficos:</h4>
                 </div>
             </div>
         </div>
@@ -194,23 +194,23 @@
             <thead>
                 <tr>
                     <th style="display:none;">ID</th>
-                    <th>Nombre del tipo de ración</th>
+                    <th>Nombre del frigorífico</th>
                     <th>Operaciones</th>
                 </tr>
             </thead>
-            <tbody id="TablaTipoAnimal">
-                {% for racion in raciones %}
+            <tbody id="TablaFrigorifico">
+                {% for frigorifico in frigorificos %}
                 <tr>
-                    <td style="display:none;"><input type="text" class="form-control" name="id" readonly>{{racion.0}}
+                    <td style="display:none;"><input type="text" class="form-control" name="id" readonly>{{frigorifico.0}}
                     </td>
-                    <td>{{racion.1}}</td>
+                    <td>{{frigorifico.1}}</td>
                     <td>
                         <!--<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>-->
-                        <a id="{{racion.0}}"
-                            onclick="myFunction('{{racion.0}}', '{{racion.1}}')" class="edit"
+                        <a id="{{frigorifico.0}}"
+                            onclick="myFunction('{{frigorifico.0}}', '{{frigorifico.1}}')" class="edit"
                             title="Edit" data-toggle="modal" data-target="#myModal"><i
                                 class="material-icons">&#xE254;</i></a>
-                        <a href="/DeleteTipoRacion/{{racion.0}}" class="delete" title="Delete"><i
+                        <a href="/DeleteFrigorifico/{{frigorifico.0}}" class="delete" title="Delete"><i
                                 class="material-icons">&#xE872;</i></a>
                     </td>
                 </tr>
@@ -239,21 +239,21 @@
                 </div>
 
                 <!-- FORM INGRESO -->
-                <form action="/UpdateTipoRacion" method="POST">
+                <form action="/UpdateFrigorifico" method="POST">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th style="display:none;">ID</th>
-                                <th>Nombre del tipo de ración</th>
+                                <th>Nombre del Frigor{ifico</th>
                                 <th>operación</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaTiporacios">
+                        <tbody id="tablaFrigorifico">
                             <tr>
                                 <td style="display:none;"><input type="text" class="form-control"
-                                        name="idTipoRacionModal" id="idTipoRacionModal" readonly value=""></td>
-                                <td><input type="text" class="form-control" name="nombreTipoRacionModal"
-                                        id="nombreTipoRacionModal">
+                                        name="idFrigorificoModal" id="idFrigorificoModal" readonly value=""></td>
+                                <td><input type="text" class="form-control" name="nombreFrigorificoModalv"
+                                        id="nombreFrigorificoModal">
                                 </td>
                                 <td><button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
                                             class="fa fa-plus"></i>

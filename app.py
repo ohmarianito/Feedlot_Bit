@@ -6,7 +6,7 @@ from rationType import *
 from historicPrice import *
 from systemParameter import *
 from animalType import *
-
+from slaughterhouse import *
 
 # Objeto Flask
 app = Flask(__name__)
@@ -18,7 +18,7 @@ app.secret_key = "appLogin"
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'feedlotdb'
+app.config['MYSQL_DB'] = 'feedlot'
 
 # Objeto MySQL
 mysql.init_app(app)
@@ -234,6 +234,45 @@ def UpdateTipoRacion():
         id = request.form['idTipoRacionModal']
         nombre = request.form['nombreTipoRacionModal']
         return racionTipoUpdate(nombre, id)
+    else:
+        return render_template('login.html')
+
+#################### FRIGORÍFICO ####################
+# Pagina frigorifico listar todo
+@app.route('/Frigorifico', methods=["GET", "POST"])
+def Frigorifico():
+    if 'nombre' in session:
+        return frigorificoInicio()
+    else:
+        return render_template('login.html')
+
+# Pagina Frigorífico add
+@app.route('/AddFrigorifico', methods=["POST"])
+def AddFrigorifico():
+    print("FRIGORÍFICO ADD")
+    if 'nombre' in session:
+        nombre = request.form['nombreFrigorifico']
+        return frigorificoAdd(nombre)
+    else:
+        return render_template('login.html')
+
+# Pagina Frigorífico delete
+@app.route('/DeleteFrigorifico/<string:id>')
+def DeleteFrigorifico(id):
+    print("FRIGORÍFICO DELETE")
+    if 'nombre' in session:
+        return frigorificoDelete(id)
+    else:
+        return render_template('login.html')
+
+# Pagina Frigorífico Update
+@app.route('/UpdateFrigorifico', methods=["POST"])
+def UpdateFrigorifico():
+    print("FRIGORÍFICO UPDATE")
+    if 'nombre' in session:
+        idFrigorifico = request.form['idFrigorificoModal']
+        nombre = request.form['nombreFrigorificoModal']
+        return frigorificoUpdate(nombre, idFrigorifico)
     else:
         return render_template('login.html')
 

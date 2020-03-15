@@ -7,7 +7,7 @@ def ingresoUsuario(correo, password):
     cur = mysql.connection.cursor()
 
     # Preparar el query
-    sQuery = "SELECT correo, password, nombre FROM usuario WHERE correo = %s"
+    sQuery = "SELECT usuarioEmail, usuarioPass, usuarioNom FROM usuario WHERE usuarioEmail = %s"
 
     # Ejecutar query
     cur.execute(sQuery, [correo])
@@ -44,7 +44,7 @@ def ingresoUsuario(correo, password):
 def registrarUsuario(nombre, correo, password):
     try:
         # Preparar el query
-        sQuery = "INSERT INTO usuario (correo, password, nombre) VALUES (%s, %s, %s)"
+        sQuery = "INSERT INTO usuario (usuarioEmail, usuarioPass, usuarioNom) VALUES (%s, %s, %s)"
 
         # Crear cursor
         cur = mysql.connection.cursor()
