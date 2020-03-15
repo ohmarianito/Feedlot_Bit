@@ -3,11 +3,12 @@
 
 
 {% block head %}
-
+<style type="text/css"></style>
 {% endblock %}
 
 
 {% block body %}
+<div class="container">
     <!-- LOS COLORES ESTAN PARA IDENTIFICAR LOS DIV SE PUEDEN SACAR HAY Q SACARLOS DESPUES-->
     <div class="container-fluid" style="margin-top: 2%;">
         <div class="row" style="background-color:lavender;">
@@ -16,8 +17,7 @@
                 <label for="staticId" class="">Edad: 35 meses</label><br>
                 <label for="staticId" class="">Peso: 105kg</label><br>
                 <label for="staticId" class="">Origen: de lo profundo</label><br>
-                <label for="staticId" class="">Sexo: poco</label><br>
-                <label for="staticId" class="">Bebe: Si</label><br>
+                <label for="staticId" class="">Sexo: M/F</label><br>
                 <label for="staticId" class="">Fecha caducidad: jugando los descuentos</label><br>
             </div>
             <div class="col-sm-5 col-sm-offset-2 col-md-6 col-md-offset-0" style="background-color:lightcyan;">
@@ -25,4 +25,5 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

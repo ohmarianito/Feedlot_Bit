@@ -23,7 +23,7 @@ def frigorificoAdd(nombre):
     # Cerramos Conexion
     cur.close()
 
-    flash("El tipo de animal se ingreso correctamente", "alert-success")
+    flash("El frigorifico se ingreso correctamente", "alert-success")
     return redirect(url_for('Frigorifico'))
 
 
@@ -33,15 +33,17 @@ def frigorificoDelete(id):
         'DELETE FROM frigorifico WHERE frigorificoId = {0}'.format(id))
     mysql.connection.commit()
     cur.close()
-    flash("El tipo de animal se elimino correctamente", "alert-success")
+    flash("El frigorifico se elimino correctamente", "alert-success")
     return redirect(url_for('Frigorifico'))
 
 
 def frigorificoUpdate(nombre, idfrigorifico):
     cur = mysql.connection.cursor()
+    print(nombre)
+    print(idfrigorifico)
     cur.execute(
         'UPDATE frigorifico SET frigorificoNom = %s WHERE frigorificoId = %s', (nombre, idfrigorifico))
     mysql.connection.commit()
     cur.close()
-    flash("El tipo de animal se actualizó correctamente", "alert-success")
+    flash("El frigorifico se actualizó correctamente", "alert-success")
     return redirect(url_for('Frigorifico'))

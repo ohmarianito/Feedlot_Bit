@@ -273,7 +273,7 @@ def UpdateFrigorifico():
     print("FRIGORÍFICO UPDATE")
     if 'nombre' in session:
         idFrigorifico = request.form['idFrigorificoModal']
-        nombre = request.form['nombreFrigorificoModal']
+        nombre = request.form['nombrefrigorificoModal']
         return frigorificoUpdate(nombre, idFrigorifico)
     else:
         return render_template('login.html')
@@ -321,7 +321,7 @@ def UpdateAnimal():
         return render_template('login.html')
 
 
-#################### COMPRA  TODO ####################
+#################### COMPRA ####################
 # Pagina frigorifico listar todo
 @app.route('/Compra', methods=["GET", "POST"])
 def Compra():
