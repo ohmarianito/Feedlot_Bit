@@ -7,6 +7,8 @@ from historicPrice import *
 from systemParameter import *
 from animalType import *
 from slaughterhouse import *
+from animal import *
+from buyAnimal import *
 
 # Objeto Flask
 app = Flask(__name__)
@@ -273,6 +275,92 @@ def UpdateFrigorifico():
         idFrigorifico = request.form['idFrigorificoModal']
         nombre = request.form['nombreFrigorificoModal']
         return frigorificoUpdate(nombre, idFrigorifico)
+    else:
+        return render_template('login.html')
+
+#################### ANIMAL ####################
+# Pagina animal listar todo
+@app.route('/Animal', methods=["GET", "POST"])
+def Animal():
+    if 'nombre' in session:
+        return animalInicio()
+    else:
+        return render_template('login.html')
+
+# Pagina Animal add
+@app.route('/AddAnimal', methods=["POST"])
+def AddAnimal():
+    print("ANIMAL ADD")
+    if 'nombre' in session:
+        print('VIENE A ANIMALLLLLL')
+        identificador = request.form['identificadorAnimal']
+        tipoAnimal = request.form['idTipoAnimal']
+        return animalAdd(identificador, tipoAnimal)
+    else:
+        return render_template('login.html')
+
+# Pagina Animal delete
+@app.route('/DeleteAnimal/<string:id>')
+def DeleteAnimal(id):
+    print("Animal DELETE")
+    if 'nombre' in session:
+        return animalDelete(id)
+    else:
+        return render_template('login.html')
+
+# Pagina Animal Update
+@app.route('/UpdateAnimal', methods=["POST"])
+def UpdateAnimal():
+    print("FRIGORÍFICO UPDATE")
+    if 'nombre' in session:
+        id = request.form['idAnimalModal']
+        tipoAnimal = request.form['idTipoAnimalModal']
+        identificador = request.form['identificadorAnimalModal']
+        return animalUpdate(identificador, tipoAnimal, id)
+    else:
+        return render_template('login.html')
+
+
+#################### COMPRA  TODO ####################
+# Pagina frigorifico listar todo
+@app.route('/Compra', methods=["GET", "POST"])
+def Compra():
+    if 'nombre' in session:
+        return compraInicio()
+    else:
+        return render_template('login.html')
+
+# Pagina Compra add
+@app.route('/AddCompra', methods=["POST"])
+def AddCompra():
+    print("COMPRA ADD")
+    if 'nombre' in session:
+        fecha = request.form['fechaCompra']
+        idAnimal = request.form['idAnimalCompra']
+        precio = request.form['precioCompra']
+        return compraAdd(fecha, idAnimal, precio)
+    else:
+        return render_template('login.html')
+
+# Pagina Compra delete
+@app.route('/DeleteCompra/<string:id>')
+def DeleteCompra(id):
+    print("Compra DELETE")
+    if 'nombre' in session:
+        return compraDelete(id)
+    else:
+        return render_template('login.html')
+
+# Pagina Compra Update
+@app.route('/UpdateCompra', methods=["POST"])
+def UpdateCompra():
+    print("Compra UPDATE")
+    if 'nombre' in session:
+        id = request.form['idCompraModal']
+        fecha = request.form['fechaCompraModal']
+        animalId = request.form['idAnimalCompraModal']
+        precio = request.form['precioCompraModal']
+        return compraUpdate(fecha, animalId, precio, id)
     else:
         return render_template('login.html')
 
