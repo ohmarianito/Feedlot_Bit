@@ -116,6 +116,8 @@
         });
     });
     function myFunction(id, nombre) {
+        alert(id);
+        alert(nombre);
         $('#idfrigorificoModal').val(id);
         $('#nombrefrigorificoModal').val(nombre);
     }   
@@ -244,7 +246,7 @@
                         <thead>
                             <tr>
                                 <th style="display:none;">ID</th>
-                                <th>Nombre del Frigor{ifico</th>
+                                <th>Nombre del Frigorifico</th>
                                 <th>operación</th>
                             </tr>
                         </thead>
@@ -252,8 +254,8 @@
                             <tr>
                                 <td style="display:none;"><input type="text" class="form-control"
                                         name="idFrigorificoModal" id="idFrigorificoModal" readonly value=""></td>
-                                <td><input type="text" class="form-control" name="nombreFrigorificoModalv"
-                                        id="nombreFrigorificoModal">
+                                <td><input type="text" class="form-control" name="nombrefrigorificoModal"
+                                        id="nombrefrigorificoModal">
                                 </td>
                                 <td><button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
                                             class="fa fa-plus"></i>
