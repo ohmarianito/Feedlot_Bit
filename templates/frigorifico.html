@@ -250,14 +250,14 @@
                         </thead>
                         <tbody id="tablaFrigorifico">
                             <tr>
-                                <td style="display:none;"><input type="text" class="form-control"
-                                        name="idFrigorificoModal" id="idFrigorificoModal" readonly value=""></td>
-                                <td><input type="text" class="form-control" name="nombrefrigorificoModal"
-                                        id="nombrefrigorificoModal">
+                                <td style="display:none;">
+                                    <input type="text" class="form-control" name="idFrigorificoModal" id="idFrigorificoModal" readonly value="">
                                 </td>
-                                <td><button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
-                                            class="fa fa-plus"></i>
-                                        Actualizar</button>
+                                <td>
+                                    <input type="text" class="form-control" name="nombrefrigorificoModal" id="nombrefrigorificoModal">
+                                </td>
+                                <td>
+                                    <button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -267,12 +267,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
-
-
             </div>
-
         </div>
     </div>
-
 </div>
 {% endblock %}

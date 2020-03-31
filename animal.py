@@ -31,8 +31,8 @@ def animalInicio():
 
 def animalAdd(identificador, tipoAnimal):
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO animal (tipoAnimalId, identificadorAnimal)  VALUES (%s, %s)",
-                (tipoAnimal, identificador))
+    cur.execute("INSERT INTO animal (animalId, tipoAnimalId)  VALUES (%s, %s)",
+                (identificador, tipoAnimal))
     mysql.connection.commit()
     cur.close()
 
@@ -53,7 +53,7 @@ def animalDelete(id):
 def animalUpdate(identificador, tipoAnimal, id):
     cur = mysql.connection.cursor()
     cur.execute(
-        'UPDATE animal SET tipoAnimalId = %s, identificadorAnimal = %s  WHERE animalId = %s', (tipoAnimal, identificador,  id))
+        'UPDATE animal SET tipoAnimalId = %s, animalIdInt = %s  WHERE animalId = %s', (tipoAnimal, identificador,  id))
     mysql.connection.commit()
     cur.close()
     flash("El animal se actualizó correctamente", "alert-success")

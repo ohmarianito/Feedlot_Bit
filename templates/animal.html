@@ -266,10 +266,11 @@
                         </thead>
                         <tbody id="tablaAnimales">
                             <tr>
-                                <td style="display:none;"><input type="text" class="form-control" name="idAnimalModal"
-                                        id="idAnimalModal" readonly value=""></td>
-                                <td><input type="text" class="form-control" name="identificadorAnimalModal"
-                                        id="identificadorAnimalModal" value="">
+                                <td style="display:none;">
+                                    <input type="text" class="form-control" name="idAnimalModal" id="idAnimalModal" readonly value="">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="identificadorAnimalModal" id="identificadorAnimalModal" value="">
                                 </td>
                                 <td>
                                     <select class="form-control" name="idTipoAnimalModal" id="idTipoAnimalModal">
@@ -280,9 +281,8 @@
                                         {% endfor %}
                                     </select>
                                 </td>
-                                <td><button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
-                                            class="fa fa-plus"></i>
-                                        Actualizar</button>
+                                <td>
+                                    <button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -292,12 +292,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
-
-
             </div>
-
         </div>
     </div>
-
 </div>
 {% endblock %}

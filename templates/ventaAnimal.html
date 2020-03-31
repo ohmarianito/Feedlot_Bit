@@ -110,16 +110,24 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        var today = new Date();
+        var date = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
+        $('#fechaVenta').val(date.toString())
+
+
         //borro msj
         $('.message a').click(function () {
             $('#idMensajeError').hide();
         });
     });
-    function myFunction(id, nombre, valor) {
-        $('#idParametroModal').val(id);
-        $('#nombreParametroModal').val(nombre);
-        $('#valorParametrolModal').val(valor);
-    }   
+    function myFunction(id, fecha, animalId, frigorificoId, precio) {
+        $('#idVentaModal').val(id);    
+        $('#fechaVentaModal').val(fecha);
+        $('#idAnimalVentaModal').val(animalId);
+        $('#idFrigorificoVentaModal').val(frigorificoId);
+        $('#precioVentaModal').val(precio);
+    }
 </script>
 {% endblock %}
 
@@ -127,11 +135,11 @@
 <div class="container">
     <div class="table-wrapper">
         <!-- FORM INGRESO -->
-        <form action="/AddParametro" method="POST">
+        <form action="/AddVenta" method="POST">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h2>Parámetro del <b>sistema</b></h2>
+                        <h2>Ingreso de <b>Venta</b></h2>
                     </div>
                 </div>
             </div>
@@ -139,7 +147,7 @@
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h4>Nuevo parámetro:</h4>
+                        <h4>Nueva venta:</h4>
                     </div>
                 </div>
             </div>
@@ -147,20 +155,43 @@
                 <thead>
                     <tr>
                         <th style="display:none;">ID</th>
-                        <th>Nombre</th>
-                        <th>Valor U$$/$</th>
+                        <th>Fecha</th>
+                        <th>Animal</th>
+                        <th>Frigorífico</th>
+                        <th>Precio U$$/$</th>
                         <th>operación</th>
                     </tr>
                 </thead>
-                <tbody id="tablaParametros">
+                <tbody id="tablaVenta">
                     <tr>
-                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idParametro"
+                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idVenta"
                                 readonly value=""></td>
-                        <td><input type="text" class="form-control" name="nombreParametro" id="nombreParametro" 
-                                value="">
+                        <td>
+                            <input type="text" class="form-control" name="fechaVenta" id="fechaVenta" readonly value="">
                         </td>
-                        <td><input type="text" class="form-control" name="valorParametro" id="valorParametro"></td>
-                        <td><button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
+                        <td>
+                            <select class="form-control" name="idAnimalVenta" id="idAnimalVenta">
+                                {% for animal in animales %}
+
+                                <option value="{{animal.0}}">{{animal.2}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" name="idFrigorificoVenta" id="idFrigorificoVenta">
+                                {% for frigorifico in frigorificos %}
+
+                                <option value="{{frigorifico.0}}">{{frigorifico.1}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </td>                        
+                        <td>
+                            <input type="text" class="form-control" name="precioVenta" id="precioVenta">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
                         </td>
                     </tr>
                 </tbody>
@@ -188,7 +219,7 @@
         <div class="table-title">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4>Lista de parámetros:</h4>
+                    <h4>Lista de ventas:</h4>
                 </div>
             </div>
         </div>
@@ -197,25 +228,29 @@
             <thead>
                 <tr>
                     <th style="display:none;">ID</th>
-                    <th>Nombre</th>
-                    <th>Valor U$$/$</th>
-                    <th>Operaciones</th>
+                    <th>Fecha</th>
+                    <th>Animal</th>
+                    <th>Frigorífico</th>
+                    <th>Precio U$$/$</th>
+                    <th>operación</th>
                 </tr>
             </thead>
-            <tbody id="tablaParametros">
-                {% for parametro in parametros %}
+            <tbody id="tablaVenta">
+                {% for venta in ventas %}
                 <tr>
-                    <td style="display:none;"><input type="text" class="form-control" name="id" readonly>{{parametro.0}}
+                    <td style="display:none;"><input type="text" class="form-control" name="id" readonly>
+                        {{venta.0}}
                     </td>
-                    <td>{{parametro.1}}</td>
-                    <td>{{parametro.2}}</td>
+                    <td>{{venta.1}}</td>
+                    <td>{{venta.5}}</td>
+                    <td>{{venta.6}}</td>                    
+                    <td>{{venta.4}}</td>
                     <td>
                         <!--<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>-->
-                        <a id="{{parametro.0}}"
-                            onclick="myFunction('{{parametro.0}}', '{{parametro.1}}', '{{parametro.2}}')" class="edit"
-                            title="Edit" data-toggle="modal" data-target="#myModal"><i
+                        <a id="{{venta.0}}" onclick="myFunction('{{venta.0}}', '{{venta.1}}', '{{venta.2}}', '{{venta.3}}', '{{venta.4}}')"
+                            class="edit" title="Edit" data-toggle="modal" data-target="#myModal"><i
                                 class="material-icons">&#xE254;</i></a>
-                        <a href="/DeleteParametro/{{parametro.0}}" class="delete" title="Delete"><i
+                        <a href="/DeleteVenta/{{venta.0}}" class="delete" title="Delete"><i
                                 class="material-icons">&#xE872;</i></a>
                     </td>
                 </tr>
@@ -228,7 +263,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="width:800px">
 
             <!-- Modal content-->
             <div class="modal-content">
@@ -237,36 +272,56 @@
                     <div class="table-title">
                         <div class="row">
                             <div class="col-sm-8">
-                                <h4>Modificar registro:</h4>
+                                <h4>Modificar venta:</h4>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- FORM INGRESO -->
-                <form action="/UpdateParametro" method="POST">
+                <form action="/UpdateVenta" method="POST">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th style="display:none;">ID</th>
-                                <th>Nombre</th>
-                                <th>Valor U$$/$</th>
+                                <th>Fecha</th>
+                                <th>Animal</th>
+                                <th>Friigorífico</th>
+                                <th>Precio U$$/$</th>
                                 <th>operación</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaParametros">
+                        <tbody id="tablaVenta">
                             <tr>
-                                <td style="display:none;"><input type="text" class="form-control"
-                                        name="idParametroModal" id="idParametroModal" readonly value=""></td>
-                                <td><input type="text" class="form-control" name="nombreParametroModal"
-                                        id="nombreParametroModal">
+                                <td style="display:none;">
+                                    <input type="text" class="form-control" name="idVentaModal" id="idVentaModal" readonly value="">
                                 </td>
-                                <td><input type="text" class="form-control" name="valorParametrolModal"
-                                        id="valorParametrolModal">
+                                <td> 
+                                    <input type="date" class="form-control" name="fechaVentaModal" id="fechaVentaModal">
                                 </td>
-                                <td><button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
-                                            class="fa fa-plus"></i>
-                                        Actulizar</button>
+                                <td>
+                                    <select class="form-control" name="idAnimalVentaModal" id="idAnimalVentaModal">
+                                        {% for animal in animales %}
+
+                                        <option value="{{animal.0}}">{{animal.2}}</option>
+
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" name="idFrigorificoVentaModal" id="idFrigorificoVentaModal">
+                                        {% for frigorifico in frigorificos %}
+
+                                        <option value="{{frigorifico.0}}">{{frigorifico.1}}</option>
+
+                                        {% endfor %}
+                                    </select>
+                                </td>                                
+                                <td>
+                                    <input type="text" class="form-control" name="precioVentaModal" id="precioVentaModal">
+                                </td>
+                                <td>
+                                    <button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -276,12 +331,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
-
-
             </div>
-
         </div>
     </div>
-
 </div>
 {% endblock %}

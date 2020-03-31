@@ -115,10 +115,11 @@
             $('#idMensajeError').hide();
         });
     });
-    function myFunction(id, nombre, valor) {
-        $('#idParametroModal').val(id);
-        $('#nombreParametroModal').val(nombre);
-        $('#valorParametrolModal').val(valor);
+    function myFunction(id, nombre, capacidad, ubicacion) {
+        $('#idCorralModal').val(id);
+        $('#nombreCorralModal').val(nombre);
+        $('#capacidadCorralModal').val(capacidad);
+        $('#ubicacionCorralModal').val(ubicacion);
     }   
 </script>
 {% endblock %}
@@ -127,11 +128,11 @@
 <div class="container">
     <div class="table-wrapper">
         <!-- FORM INGRESO -->
-        <form action="/AddParametro" method="POST">
+        <form action="/AddCorral" method="POST">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h2>Parámetro del <b>sistema</b></h2>
+                        <h2>Corral</h2>
                     </div>
                 </div>
             </div>
@@ -139,7 +140,7 @@
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h4>Nuevo parámetro:</h4>
+                        <h4>Nuevo corral:</h4>
                     </div>
                 </div>
             </div>
@@ -148,19 +149,26 @@
                     <tr>
                         <th style="display:none;">ID</th>
                         <th>Nombre</th>
-                        <th>Valor U$$/$</th>
+                        <th>Capacidad</th>
+                        <th>Ubicación</th>
                         <th>operación</th>
                     </tr>
                 </thead>
-                <tbody id="tablaParametros">
+                <tbody id="tablaCorral">
                     <tr>
-                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idParametro"
+                        <td style="display:none;"><input type="text" class="form-control" name="id" id="idCorral"
                                 readonly value=""></td>
-                        <td><input type="text" class="form-control" name="nombreParametro" id="nombreParametro" 
-                                value="">
+                        <td>
+                            <input type="text" class="form-control" name="nombreCorral" id="nombreCorral" value="">
                         </td>
-                        <td><input type="text" class="form-control" name="valorParametro" id="valorParametro"></td>
-                        <td><button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
+                        <td>
+                            <input type="text" class="form-control" name="capacidadCorral" id="capacidadCorral" value="">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="ubicacionCorral" id="ubicacionCorral" value="">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
                         </td>
                     </tr>
                 </tbody>
@@ -188,7 +196,7 @@
         <div class="table-title">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4>Lista de parámetros:</h4>
+                    <h4>Lista de corrales:</h4>
                 </div>
             </div>
         </div>
@@ -198,24 +206,33 @@
                 <tr>
                     <th style="display:none;">ID</th>
                     <th>Nombre</th>
-                    <th>Valor U$$/$</th>
+                    <th>Capacidad</th>
+                    <th>Ubicación</th>
                     <th>Operaciones</th>
                 </tr>
             </thead>
-            <tbody id="tablaParametros">
-                {% for parametro in parametros %}
+            <tbody id="TablaCorral">
+                {% for corral in corrales %}
                 <tr>
-                    <td style="display:none;"><input type="text" class="form-control" name="id" readonly>{{parametro.0}}
+                    <td style="display:none;">
+                        <input type="text" class="form-control" name="id" readonly>{{corral.0}}
                     </td>
-                    <td>{{parametro.1}}</td>
-                    <td>{{parametro.2}}</td>
+                    <td>
+                        {{corral.1}}
+                    </td>
+                    <td>
+                        {{corral.2}}
+                    </td>
+                    <td>
+                        {{corral.3}}
+                    </td>                                        
                     <td>
                         <!--<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>-->
-                        <a id="{{parametro.0}}"
-                            onclick="myFunction('{{parametro.0}}', '{{parametro.1}}', '{{parametro.2}}')" class="edit"
+                        <a id="{{corral.0}}"
+                            onclick="myFunction('{{corral.0}}', '{{corral.1}}', '{{corral.2}}', '{{corral.3}}')" class="edit"
                             title="Edit" data-toggle="modal" data-target="#myModal"><i
                                 class="material-icons">&#xE254;</i></a>
-                        <a href="/DeleteParametro/{{parametro.0}}" class="delete" title="Delete"><i
+                        <a href="/DeleteCorral/{{corral.0}}" class="delete" title="Delete"><i
                                 class="material-icons">&#xE872;</i></a>
                     </td>
                 </tr>
@@ -244,33 +261,37 @@
                 </div>
 
                 <!-- FORM INGRESO -->
-                <form action="/UpdateParametro" method="POST">
+                <form action="/UpdateCorral" method="POST">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th style="display:none;">ID</th>
                                 <th>Nombre</th>
-                                <th>Valor U$$/$</th>
+                                <th>Capacidad</th>
+                                <th>Ubicación</th>
                                 <th>operación</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaParametros">
+                        <tbody id="tablaCorral">
                             <tr>
-                                <td style="display:none;"><input type="text" class="form-control"
-                                        name="idParametroModal" id="idParametroModal" readonly value=""></td>
-                                <td><input type="text" class="form-control" name="nombreParametroModal"
-                                        id="nombreParametroModal">
+                                <td style="display:none;">
+                                    <input type="text" class="form-control" name="idCorralModal" id="idCorralModal" readonly value="">
                                 </td>
-                                <td><input type="text" class="form-control" name="valorParametrolModal"
-                                        id="valorParametrolModal">
+                                <td>
+                                    <input type="text" class="form-control" name="nombreCorralModal" id="nombreCorralModal">
                                 </td>
-                                <td><button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
-                                            class="fa fa-plus"></i>
-                                        Actulizar</button>
+                                <td>
+                                    <input type="text" class="form-control" name="capacidadCorralModal" id="capacidadCorralModal">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="ubicacionCorralModal" id="ubicacionCorralModal">
+                                </td>                                                                
+                                <td>
+                                    <button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
                                 </td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table> 
                 </form>
 
                 <div class="modal-footer">

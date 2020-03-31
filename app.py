@@ -9,6 +9,8 @@ from animalType import *
 from slaughterhouse import *
 from animal import *
 from buyAnimal import *
+from corral import *
+from sellAnimal import *
 
 # Objeto Flask
 app = Flask(__name__)
@@ -278,6 +280,50 @@ def UpdateFrigorifico():
     else:
         return render_template('login.html')
 
+
+#################### CORRAL ####################
+# Pagina corral listar todo
+@app.route('/Corral', methods=["GET", "POST"])
+def Corral():
+    if 'nombre' in session:
+        return corralInicio()
+    else:
+        return render_template('login.html')
+
+# Pagina Corral add
+@app.route('/AddCorral', methods=["POST"])
+def AddCorral():
+    print("CORRAL ADD")
+    if 'nombre' in session:
+        nombre = request.form['nombreCorral']
+        capacidad = request.form['capacidadCorral']
+        ubicacion = request.form['ubicacionCorral']
+        return corralAdd(nombre, capacidad, ubicacion)
+    else:
+        return render_template('login.html')
+
+# Pagina Corral delete
+@app.route('/DeleteCorral/<string:id>')
+def DeleteCorral(id):
+    print("CORRAL DELETE")
+    if 'nombre' in session:
+        return corralDelete(id)
+    else:
+        return render_template('login.html')
+
+# Pagina Corral Update
+@app.route('/UpdateCorral', methods=["POST"])
+def UpdateCorral():
+    print("CORRAL UPDATE")
+    if 'nombre' in session:
+        idCorral = request.form['idCorralModal']
+        nombre = request.form['nombreCorralModal']
+        capacidad = request.form['capacidadCorralModal']
+        ubicacion = request.form['ubicacionCorralModal']
+        return corralUpdate(nombre, capacidad, ubicacion, idCorral)
+    else:
+        return render_template('login.html')
+
 #################### ANIMAL ####################
 # Pagina animal listar todo
 @app.route('/Animal', methods=["GET", "POST"])
@@ -311,7 +357,7 @@ def DeleteAnimal(id):
 # Pagina Animal Update
 @app.route('/UpdateAnimal', methods=["POST"])
 def UpdateAnimal():
-    print("FRIGORÍFICO UPDATE")
+    print("ANIMAL UPDATE")
     if 'nombre' in session:
         id = request.form['idAnimalModal']
         tipoAnimal = request.form['idTipoAnimalModal']
@@ -322,7 +368,7 @@ def UpdateAnimal():
 
 
 #################### COMPRA ####################
-# Pagina frigorifico listar todo
+# Pagina Compra listar todo
 @app.route('/Compra', methods=["GET", "POST"])
 def Compra():
     if 'nombre' in session:
@@ -361,6 +407,52 @@ def UpdateCompra():
         animalId = request.form['idAnimalCompraModal']
         precio = request.form['precioCompraModal']
         return compraUpdate(fecha, animalId, precio, id)
+    else:
+        return render_template('login.html')
+
+
+#################### VENTA ####################
+# Pagina Venta listar todo
+@app.route('/Venta', methods=["GET", "POST"])
+def Venta():
+    if 'nombre' in session:
+        return ventaInicio()
+    else:
+        return render_template('login.html')
+
+# Pagina Venta add
+@app.route('/AddVenta', methods=["POST"])
+def AddVenta():
+    print("VENTA ADD")
+    if 'nombre' in session:
+        fecha = request.form['fechaVenta']
+        idAnimal = request.form['idAnimalVenta']
+        idFrigorifico = request.form['idFrigorificoVenta']
+        precio = request.form['precioVenta']
+        return ventaAdd(fecha, idAnimal, idFrigorifico, precio)
+    else:
+        return render_template('login.html')
+
+# Pagina Venta delete
+@app.route('/DeleteVenta/<string:id>')
+def DeleteVenta(id):
+    print("Venta DELETE")
+    if 'nombre' in session:
+        return ventaDelete(id)
+    else:
+        return render_template('login.html')
+
+# Pagina Venta Update
+@app.route('/UpdateVenta', methods=["POST"])
+def UpdateVenta():
+    print("Venta UPDATE")
+    if 'nombre' in session:
+        id = request.form['idVentaModal']
+        fecha = request.form['fechaVentaModal']
+        animalId = request.form['idAnimalVentaModal']
+        idFrigorifico = request.form['idFrigorificoVenta']        
+        precio = request.form['precioVentaModal']
+        return ventaUpdate(fecha, animalId, frigorificoId, precio, id)
     else:
         return render_template('login.html')
 
