@@ -11,6 +11,9 @@ from animal import *
 from buyAnimal import *
 from corral import *
 from sellAnimal import *
+from animalHistory import *
+from cattleFattening import *
+
 
 # Objeto Flask
 app = Flask(__name__)
@@ -367,6 +370,51 @@ def UpdateAnimal():
         return render_template('login.html')
 
 
+#################### HISTORIA ANIMAL ####################
+# Pagina HistoriaAnimal listar todo
+@app.route('/AnimalHistoria', methods=["GET", "POST"])
+def AnimalHistoria():
+    if 'nombre' in session:
+        return historiaInicio()
+    else:
+        return render_template('login.html')
+
+# Pagina Historia add
+@app.route('/AddHistoria', methods=["POST"])
+def AddHistoria():
+    print("HISTORIA ADD")
+    if 'nombre' in session:
+        idAnimal = request.form['idAnimal']
+        fecha = request.form['fechaHistoria']
+        peso = request.form['pesoHistoria']
+        obs = request.form['obsHistoria']
+        return historiaAdd(idAnimal, fecha, peso, obs)
+    else:
+        return render_template('login.html')
+
+# Pagina Historia delete
+@app.route('/DeleteHistoria/<idAnimal>/<fechaHistoria>')
+def DeleteHistoria(idAnimal, fechaHistoria):
+    print("Historia DELETE")
+    if 'nombre' in session:
+        return historiaDelete(idAnimal, fechaHistoria)
+    else:
+        return render_template('login.html')
+
+# Pagina Historia Update
+@app.route('/UpdateHistoria', methods=["POST"])
+def UpdateHistoria():
+    print("Historia UPDATE")
+    if 'nombre' in session:
+        idAnimal = request.form['idAnimalModal']
+        fecha = request.form['fechaHistoriaModal']
+        peso = request.form['pesoHistoriaModal']
+        obs = request.form['obsHistoriaModal']
+        return historiaUpdate(idAnimal, fecha, peso, obs)
+    else:
+        return render_template('login.html')
+
+
 #################### COMPRA ####################
 # Pagina Compra listar todo
 @app.route('/Compra', methods=["GET", "POST"])
@@ -452,7 +500,52 @@ def UpdateVenta():
         animalId = request.form['idAnimalVentaModal']
         idFrigorifico = request.form['idFrigorificoVenta']        
         precio = request.form['precioVentaModal']
-        return ventaUpdate(fecha, animalId, frigorificoId, precio, id)
+        return ventaUpdate(fecha, animalId, idFrigorifico, precio, id)
+    else:
+        return render_template('login.html')
+
+
+#################### ENGORDE ####################
+# Pagina Engorde listar todo
+@app.route('/Engorde', methods=["GET", "POST"])
+def Engorde():
+    if 'nombre' in session:
+        return engordeInicio()
+    else:
+        return render_template('login.html')
+
+# Pagina Engorde add
+@app.route('/AddEngorde', methods=["POST"])
+def AddEngorde():
+    print("Engorde ADD")
+    if 'nombre' in session:
+        idCorral = request.form['idCorral']
+        #idEngorde = request.form['idEngorde']
+        tipoRacion = request.form['tipoRacion']
+        fechaEngorde = request.form['fechaEngorde']
+        return engordeAdd(idCorral, tipoRacion, fechaEngorde)
+    else:
+        return render_template('login.html')
+
+# Pagina Engorde delete
+@app.route('/DeleteEngorde/<idCorral>/<idEngorde>')
+def DeleteEngorde(idCorral, idEngorde):
+    print("Engorde DELETE")
+    if 'nombre' in session:
+        return engordeDelete(idCorral, idEngorde)
+    else:
+        return render_template('login.html')
+
+# Pagina Engorde Update
+@app.route('/UpdateEngorde', methods=["POST"])
+def UpdateEngorde():
+    print("Engorde UPDATE")
+    if 'nombre' in session:
+        idCorral = request.form['idCorralModal']
+        idEngorde = request.form['idEngordeModal']
+        tipoRacion = request.form['tipoRacionModal']
+        fechaEngorde = request.form['fechaEngordeModal']
+        return engordeUpdate(idCorral, idEngorde, tipoRacion, fechaEngorde)
     else:
         return render_template('login.html')
 

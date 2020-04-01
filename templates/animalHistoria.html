@@ -1,0 +1,314 @@
+<!-- HEREDA TODO DE BASE.html -->
+{% extends 'base.html'  %}
+
+
+{% block head %}
+<style type="text/css">
+    body {
+        color: #404E67;
+        background: #F5F7FA;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .table-wrapper {
+        width: 700px;
+        margin: 30px auto;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    }
+
+    .table-title {
+        padding-bottom: 10px;
+        margin: 0 0 10px;
+    }
+
+    .table-title h2 {
+        margin: 6px 0 0;
+        font-size: 22px;
+    }
+
+    .table-title .add-new {
+        float: right;
+        height: 30px;
+        font-weight: bold;
+        font-size: 12px;
+        text-shadow: none;
+        min-width: 100px;
+        border-radius: 50px;
+        line-height: 13px;
+    }
+
+    .table-title .add-new i {
+        margin-right: 4px;
+    }
+
+    table.table {
+        table-layout: fixed;
+    }
+
+    table.table tr th,
+    table.table tr td {
+        border-color: #e9e9e9;
+    }
+
+    table.table th i {
+        font-size: 13px;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+
+    table.table th:last-child {
+        width: 100px;
+    }
+
+    table.table td a {
+        cursor: pointer;
+        display: inline-block;
+        margin: 0 5px;
+        min-width: 24px;
+    }
+
+    table.table td a.add {
+        color: #27C46B;
+    }
+
+    table.table td a.edit {
+        color: #FFC107;
+    }
+
+    table.table td a.delete {
+        color: #E34724;
+    }
+
+    table.table td i {
+        font-size: 19px;
+    }
+
+    table.table td a.add i {
+        font-size: 24px;
+        margin-right: -1px;
+        position: relative;
+        top: 3px;
+    }
+
+    table.table .form-control {
+        height: 32px;
+        line-height: 32px;
+        box-shadow: none;
+        border-radius: 2px;
+    }
+
+    table.table .form-control.error {
+        border-color: #f50000;
+    }
+
+    table.table td .add {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var today = new Date();
+        var date = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
+        $('#fechaAnimalHistorial').val(date.toString())
+
+
+        //borro msj
+        $('.message a').click(function () {
+            $('#idMensajeError').hide();
+        });
+    });
+    function myFunction(animalId, fecha, peso, obs) {
+        $('#idAnimalModal').val(animalId);
+        $('#fechaHistoriaModal').val(fecha);
+        $('#pesoHistoriaModal').val(peso);
+        $('#obsHistoriaModal').val(obs);
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="table-wrapper">
+        <!-- FORM INGRESO -->
+        <form action="/AddHistoria" method="POST">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2>Ingreso de <b>historia del animal</b></h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h4>Nueva historia del animal:</h4>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Animal</th>
+                        <th>Fecha</th>
+                        <th>Peso</th>
+                        <th>Observaciones</th>
+                        <th>operación</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaHistoria">
+                    <tr>
+                        <td>
+                            <select class="form-control" name="idAnimal" id="idAnimal">
+                                {% for animal in animales %}
+
+                                <option value="{{animal.0}}">{{animal.2}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" name="fechaHistoria" id="fechaHistoria">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="pesoHistoria" id="pesoHistoria">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="obsHistoria" id="obsHistoria">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert {{category}}" id="idMensajeError">
+                            {{message}}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- FIN FORM INGRESO -->
+
+        <!-- LISTA INGRESOS -->
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h4>Lista de hitoria de animales:</h4>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Fecha</th>
+                    <th>Peso</th>
+                    <th>Observaciones</th>
+                    <th>operación</th>
+                </tr>
+            </thead>
+            <tbody id="tablaHistoricoPrecio">
+                {% for historia in historias %}
+                <tr>
+                    <td>{{historia.4}}</td>
+                    <td>{{historia.1}}</td>
+                    <td>{{historia.2}}</td>
+                    <td>{{historia.3}}</td>
+                    <td>
+                        <!--<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>-->
+                        <a id="{{historia.0}}" onclick="myFunction('{{historia.0}}', '{{historia.1}}', '{{historia.2}}', '{{historia.3}}')"
+                            class="edit" title="Edit" data-toggle="modal" data-target="#myModal"><i
+                                class="material-icons">&#xE254;</i></a>
+                        <a href="/DeleteHistoria/{{historia.0}}/{{historia.1}}" class="delete" title="Delete"><i
+                                class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container" id="modalPage">
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h4>Modificar historia:</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM UPDATE -->
+                <form action="/UpdateHistoria" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Animal</th>
+                                <th>Fecha</th>
+                                <th>Peso</th>
+                                <th>Observaciones</th>
+                                <th>operación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaHistoria">
+                            <tr>
+                                <td>
+                                    <select class="form-control" name="idAnimalModal" id="idAnimalModal" readonly value="">
+                                        {% for animal in animales %}
+        
+                                        <option value="{{animal.0}}">{{animal.2}}</option>
+        
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="date" class="form-control" name="fechaHistoriaModal" id="fechaHistoriaModal" readonly value="">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="pesoHistoriaModal" id="pesoHistoriaModal">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="obsHistoriaModal" id="obsHistoriaModal">
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

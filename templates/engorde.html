@@ -1,0 +1,322 @@
+<!-- HEREDA TODO DE BASE.html -->
+{% extends 'base.html'  %}
+
+
+{% block head %}
+<style type="text/css">
+    body {
+        color: #404E67;
+        background: #F5F7FA;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .table-wrapper {
+        width: 700px;
+        margin: 30px auto;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    }
+
+    .table-title {
+        padding-bottom: 10px;
+        margin: 0 0 10px;
+    }
+
+    .table-title h2 {
+        margin: 6px 0 0;
+        font-size: 22px;
+    }
+
+    .table-title .add-new {
+        float: right;
+        height: 30px;
+        font-weight: bold;
+        font-size: 12px;
+        text-shadow: none;
+        min-width: 100px;
+        border-radius: 50px;
+        line-height: 13px;
+    }
+
+    .table-title .add-new i {
+        margin-right: 4px;
+    }
+
+    table.table {
+        table-layout: fixed;
+    }
+
+    table.table tr th,
+    table.table tr td {
+        border-color: #e9e9e9;
+    }
+
+    table.table th i {
+        font-size: 13px;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+
+    table.table th:last-child {
+        width: 100px;
+    }
+
+    table.table td a {
+        cursor: pointer;
+        display: inline-block;
+        margin: 0 5px;
+        min-width: 24px;
+    }
+
+    table.table td a.add {
+        color: #27C46B;
+    }
+
+    table.table td a.edit {
+        color: #FFC107;
+    }
+
+    table.table td a.delete {
+        color: #E34724;
+    }
+
+    table.table td i {
+        font-size: 19px;
+    }
+
+    table.table td a.add i {
+        font-size: 24px;
+        margin-right: -1px;
+        position: relative;
+        top: 3px;
+    }
+
+    table.table .form-control {
+        height: 32px;
+        line-height: 32px;
+        box-shadow: none;
+        border-radius: 2px;
+    }
+
+    table.table .form-control.error {
+        border-color: #f50000;
+    }
+
+    table.table td .add {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var today = new Date();
+        var date = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
+        $('#fechaEngorde').val(date.toString())
+
+
+        //borro msj
+        $('.message a').click(function () {
+            $('#idMensajeError').hide();
+        });
+    });
+    function myFunction(corralId, engordeId, tipoRacion, engordeFecha) {
+        $('#idCorralModal').val(corralId);
+        $('#idEngordeModal').val(engordeId);
+        $('#tipoRacionModal').val(tipoRacion);
+        $('#fechaEngordeModal').val(engordeFecha);
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="table-wrapper">
+        <!-- FORM INGRESO -->
+        <form action="/AddEngorde" method="POST">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2>Ingreso del <b>engorde</b></h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h4>Nueva engorde:</h4>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Corral</th>
+                        <th>Tipo de Ración</th>
+                        <th>Fecha</th>
+                        <th>operación</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCorral">
+                    <tr>
+                        <td>
+                            <select class="form-control" name="idCorral" id="idCorral">
+                                {% for corral in corrales %}
+
+                                <option value="{{corral.0}}">{{corral.1}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" name="tipoRacion" id="tipoRacion">
+                                {% for racion in raciones %}
+
+                                <option value="{{racion.0}}">{{racion.1}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" name="fechaEngorde" id="fechaEngorde">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert {{category}}" id="idMensajeError">
+                            {{message}}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- FIN FORM INGRESO -->
+
+        <!-- LISTA INGRESOS -->
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h4>Lista de engordes:</h4>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Corral</th>
+                    <th>Engorde</th>
+                    <th>Tipo de Ración</th>
+                    <th>Fecha</th>
+                    <th>operación</th>
+                </tr>
+            </thead>
+            <tbody id="tablaHistoricoPrecio">
+                {% for engorde in engordes %}
+                <tr>
+                    <td>{{engorde.4}}</td>
+                    <td>{{engorde.1}}</td>
+                    <td>{{engorde.5}}</td>
+                    <td>{{engorde.3}}</td>
+                    <td>
+                        <!--<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>-->
+                        <a id="{{engorde.0}}" onclick="myFunction('{{engorde.0}}', '{{engorde.1}}', '{{engorde.2}}', '{{engorde.3}}')"
+                            class="edit" title="Edit" data-toggle="modal" data-target="#myModal"><i
+                                class="material-icons">&#xE254;</i></a>
+                        <a href="/DeleteEngorde/{{engorde.0}}/{{engorde.1}}" class="delete" title="Delete"><i
+                                class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container" id="modalPage">
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h4>Modificar engorde:</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM UPDATE -->
+                <form action="/UpdateEngorde" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Corral</th>
+                                <th>Engorde</th>
+                                <th>Tipo de Ración</th>
+                                <th>Fecha</th>
+                                <th>operación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaEngorde">
+                            <tr>
+                                <td>
+                                    <select class="form-control" name="idCorralModal" id="idCorralModal" readonly value="">
+                                        {% for corral in corrales %}
+        
+                                        <option value="{{corral.0}}">{{corral.1}}</option>
+        
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="idEngordeModal" id="idEngordeModal" readonly value="">
+                                </td>
+                                <td>
+                                    <select class="form-control" name="tipoRacionModal" id="tipoRacionModal">
+                                        {% for racion in raciones %}
+        
+                                        <option value="{{racion.0}}">{{racion.1}}</option>
+        
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="date" class="form-control" name="fechaEngordeModal" id="fechaEngordeModal">
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
