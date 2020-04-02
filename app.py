@@ -20,7 +20,6 @@ app = Flask(__name__)
 
 # Llave secreta
 app.secret_key = "appLogin"
-
 # BD config
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -77,7 +76,7 @@ def ingresar():
 def historiaAnimal():
     if 'nombre' in session:
         makeGraph()
-        return render_template("animalHistory.html")
+        return render_template("animalHistoryGraph.html")
     else:
         return render_template('login.html')
 
