@@ -13,7 +13,9 @@ from corral import *
 from sellAnimal import *
 from animalHistory import *
 from cattleFattening import *
-
+from corralAnimal import *
+from datetime import date
+from dateutil import parser
 
 # Objeto Flask
 app = Flask(__name__)
@@ -410,6 +412,57 @@ def UpdateHistoria():
         peso = request.form['pesoHistoriaModal']
         obs = request.form['obsHistoriaModal']
         return historiaUpdate(idAnimal, fecha, peso, obs)
+    else:
+        return render_template('login.html')
+
+
+#################### CORRALANIMAL ####################
+# Pagina corralanimal listar todo
+@app.route('/CorralAnimal/<idCorral>', methods=["GET", "POST"])
+def CorralAnimal(idCorral):
+    if 'nombre' in session:
+        return corralAnimalInicio(idCorral)
+    else:
+        return render_template('login.html')
+
+# Pagina CorralAnimal add
+@app.route('/AddCorralAnimal', methods=["POST"])
+def AddCorralAnimal():
+    print("CORRALANIMAL ADD")
+    if 'nombre' in session:
+        corral = request.form['idCorral']
+        animal = request.form['idAnimal']
+        fecha = request.form['corralFecha']
+        fechaFinStr = request.form['corralFechaFin']
+        if fechaFinStr == '':
+            fechaFin = date.min
+        else:
+            fechaFin = request.form['corralFechaFin']
+        
+        print(fechaFin)
+        return corralAnimalAdd(corral, animal, fecha, fechaFin)
+    else:
+        return render_template('login.html')
+
+# Pagina CorralAnimal delete
+@app.route('/DeleteCorralAnimal/<idCorral>/<idAnimal>/<corralAnimalFecha>')
+def DeleteCorralAnimal(idCorral, idAnimal, corralAnimalFecha):
+    print("CORRAL ANIMAL DELETE")
+    if 'nombre' in session:
+        return corralAnimalDelete(idCorral, idAnimal, corralAnimalFecha)
+    else:
+        return render_template('login.html')
+
+# Pagina CorralAnimal Update
+@app.route('/UpdateCorralAnimal', methods=["POST"])
+def UpdateCorralAnimal():
+    print("CORRAL Animal UPDATE")
+    if 'nombre' in session:
+        corral = request.form['idCorralModal']
+        animal = request.form['idAnimalModal']
+        fecha = request.form['corralFechaModal']
+        fechaFin = request.form['corralFechaFinModal']
+        return corralAnimalUpdate(corral, animal, fecha, fechaFin)
     else:
         return render_template('login.html')
 

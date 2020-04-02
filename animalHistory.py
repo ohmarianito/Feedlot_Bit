@@ -15,7 +15,8 @@ def historiaInicio():
     cur.execute(
         'SELECT * FROM animal')
     dataAnimal = list(cur.fetchall())
-
+    cur.close()
+    
     # Tremendo codigo para que el tipo de animal se vea el nombre y no el codigo en pantalla
     # tengo lista de tuplas inmutables, recorro cada tupla, paso a lista, modifico lista luego la paso a tubla y por ultimo la remplazo
     for index, historia in enumerate(data):

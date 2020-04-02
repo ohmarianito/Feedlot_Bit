@@ -1,0 +1,233 @@
+<!-- HEREDA TODO DE BASE.html -->
+{% extends 'base.html'  %}
+
+
+{% block head %}
+<style type="text/css">
+    body {
+        color: #404E67;
+        background: #F5F7FA;
+        font-family: 'Open Sans', sans-serif;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //borro msj
+        $('.message a').click(function () {
+            $('#idMensajeError').hide();
+        });
+    });
+    function myFunction(idCorral, idAnimal, corralAnimalFecha, corralAnimalFechaFin) {
+        $('#idCorralModal').val(idCorral);
+        $('#idAnimalModal').val(idAnimal);
+        $('#corralFechaModal').val(corralAnimalFecha);
+        $('#corralFechaFinModal').val(corralAnimalFechaFin);
+    }   
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="table-wrapper">
+        <!-- FORM INGRESO -->
+        <form action="/AddCorralAnimal" method="POST">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2>Animales en corral</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h4>Nuevo Animal en Corral:</h4>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Corral</th>
+                        <th>Animal</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Fecha Salida</th>
+                        <th>operación</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCorral">
+                    <tr>
+                        <td>
+                            <select class="form-control" name="idCorral" id="idCorral" readonly value="">
+                                {% for corral in corrales %}
+
+                                    <option value="{{corral.0}}">{{corral.1}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" name="idAnimal" id="idAnimal">
+                                {% for animal in animales %}
+
+                                <option value="{{animal.0}}">{{animal.2}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" name="corralFecha" id="corralFecha" value="">
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" name="corralFechaFin" id="corralFechaFin" value="">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i> Nuevo</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert {{category}}" id="idMensajeError">
+                            {{message}}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- FIN FORM INGRESO -->
+
+        <!-- LISTA INGRESOS -->
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h4>Lista de corrales:</h4>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Corral</th>
+                    <th>Animal</th>
+                    <th>Fecha Ingreso</th>
+                    <th>Fecha Salida</th>
+                    <th>operación</th>
+                </tr>
+            </thead>
+            <tbody id="TablaCorral">
+                {% for animal in corralAnimales %}
+                <tr>
+                    <td>
+                        {{animal.4}}
+                    </td>
+                    <td>
+                        {{animal.5}}
+                    </td>
+                    <td>
+                        {{animal.2}}
+                    </td>
+                    <td>
+                        {{animal.3}}
+                    </td>
+                    <td>
+                        <!--<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>-->
+                        <a id="{{animal.0}}"
+                            onclick="myFunction('{{animal.0}}', '{{animal.1}}', '{{animal.2}}', '{{animal.3}}')"
+                            class="edit" title="Edit" data-toggle="modal" data-target="#myModal"><i
+                                class="material-icons">&#xE254;</i></a>
+                        <a href="/DeleteCorralAnimal/{{animal.0}}/{{animal.1}}/{{animal.2}}" class="delete" title="Delete"><i
+                                class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container" id="modalPage">
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h4>Modificar registro:</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM INGRESO -->
+                <form action="/UpdateCorralAnimal" method="POST">
+                    <table class="table table-bordered">
+                        <thead>
+                            <thead>
+                                <tr>
+                                    <th>Corral</th>
+                                    <th>Animal</th>
+                                    <th>Fecha Ingreso</th>
+                                    <th>Fecha Salida</th>
+                                    <th>operación</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaCorral">
+                                <tr>
+                                    <td>
+                                        <select class="form-control" name="idCorralModal" id="idCorralModal" readonly value="">
+                                            {% for corral in corrales %}
+
+                                                <option value="{{corral.0}}">{{corral.1}}</option>
+            
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" name="idAnimalModal" id="idAnimalModal" readonly value="">
+                                            {% for animal in animales %}
+            
+                                            <option value="{{animal.0}}">{{animal.2}}</option>
+            
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control" name="corralFechaModal" id="corralFechaModal" value="">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control" name="corralFechaFinModal" id="corralFechaFinModal" value="">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

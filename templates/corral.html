@@ -139,7 +139,7 @@
                                 class="material-icons">&#xE254;</i></a>
                         <a href="/DeleteCorral/{{corral.0}}" class="delete" title="Delete"><i
                                 class="material-icons">&#xE872;</i></a>
-                        <a href="/FALTA" class="add-new" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
+                        <a href="/CorralAnimal/{{corral.0}}" class="add-new" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -181,24 +181,19 @@
                         <tbody id="tablaCorral">
                             <tr>
                                 <td style="display:none;">
-                                    <input type="text" class="form-control" name="idCorralModal" id="idCorralModal"
-                                        readonly value="">
+                                    <input type="text" class="form-control" name="idCorralModal" id="idCorralModal" readonly value="">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="nombreCorralModal"
-                                        id="nombreCorralModal">
+                                    <input type="text" class="form-control" name="nombreCorralModal" id="nombreCorralModal">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="capacidadCorralModal"
-                                        id="capacidadCorralModal">
+                                    <input type="text" class="form-control" name="capacidadCorralModal" id="capacidadCorralModal">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="ubicacionCorralModal"
-                                        id="ubicacionCorralModal">
+                                    <input type="text" class="form-control" name="ubicacionCorralModal" id="ubicacionCorralModal">
                                 </td>
                                 <td>
-                                    <button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i
-                                            class="fa fa-plus"></i>Actualizar</button>
+                                    <button style="padding: 7px 3px;" type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -208,12 +203,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
-
-
             </div>
-
         </div>
     </div>
-
 </div>
 {% endblock %}
