@@ -79,9 +79,10 @@ def ingresar():
 def detalleAnimal(id):
     if 'nombre' in session:
         print(id + ' IDDDDDDDDDDDDDDDDD')
-        makeGraph()
+        makeGraph(id)
         data = getAnimalDetail(id)
-        return render_template("animalHistoryGraph.html", details = data)
+        source = "../static/grafica{0}.png".format(id)
+        return render_template("animalHistoryGraph.html", details = data, source=source)
     else:
         return render_template('login.html')
 
