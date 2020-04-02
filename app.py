@@ -16,6 +16,7 @@ from cattleFattening import *
 from corralAnimal import *
 from datetime import date
 from dateutil import parser
+from animalDetail import *
 
 # Objeto Flask
 app = Flask(__name__)
@@ -73,12 +74,14 @@ def ingresar():
         password = request.form['passwordLogin']
         return ingresoUsuario(correo, password)
 
-# Pagina historia animal
-@app.route('/historiaAnimal', methods=["GET", "POST"])
-def historiaAnimal():
+# Pagina detalle animal
+@app.route('/detalleAnimal/<string:id>', methods=["GET", "POST"])
+def detalleAnimal(id):
     if 'nombre' in session:
+        print(id + ' IDDDDDDDDDDDDDDDDD')
         makeGraph()
-        return render_template("animalHistoryGraph.html")
+        data = getAnimalDetail(id)
+        return render_template("animalHistoryGraph.html", details = data)
     else:
         return render_template('login.html')
 

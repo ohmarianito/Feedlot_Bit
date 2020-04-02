@@ -63,7 +63,7 @@
                             <select class="form-control" name="idCorral" id="idCorral" readonly value="">
                                 {% for corral in corrales %}
 
-                                    <option value="{{corral.0}}">{{corral.1}}</option>
+                                <option value="{{corral.0}}">{{corral.1}}</option>
 
                                 {% endfor %}
                             </select>
@@ -112,7 +112,7 @@
         <div class="table-title">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4>Lista de corrales:</h4>
+                    <h4>Lista de animales en el corral:</h4>
                 </div>
             </div>
         </div>
@@ -124,7 +124,7 @@
                     <th>Animal</th>
                     <th>Fecha Ingreso</th>
                     <th>Fecha Salida</th>
-                    <th>operación</th>
+                    <th style="width: 20% !important;">operación</th>
                 </tr>
             </thead>
             <tbody id="TablaCorral">
@@ -148,8 +148,10 @@
                             onclick="myFunction('{{animal.0}}', '{{animal.1}}', '{{animal.2}}', '{{animal.3}}')"
                             class="edit" title="Edit" data-toggle="modal" data-target="#myModal"><i
                                 class="material-icons">&#xE254;</i></a>
-                        <a href="/DeleteCorralAnimal/{{animal.0}}/{{animal.1}}/{{animal.2}}" class="delete" title="Delete"><i
-                                class="material-icons">&#xE872;</i></a>
+                        <a href="/DeleteCorralAnimal/{{animal.0}}/{{animal.1}}/{{animal.2}}" class="delete"
+                            title="Delete"><i class="material-icons">&#xE872;</i></a>
+                        <a href="/detalleAnimal/{{animal.1}}" class="add-new" title="info" data-toggle="tooltip"><i
+                                class="material-icons">&#xe88e;</i></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -189,36 +191,41 @@
                                     <th>operación</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaCorral">
-                                <tr>
-                                    <td>
-                                        <select class="form-control" name="idCorralModal" id="idCorralModal" readonly value="">
-                                            {% for corral in corrales %}
+                        <tbody id="tablaCorral">
+                            <tr>
+                                <td>
+                                    <select class="form-control" name="idCorralModal" id="idCorralModal" readonly
+                                        value="">
+                                        {% for corral in corrales %}
 
-                                                <option value="{{corral.0}}">{{corral.1}}</option>
-            
-                                            {% endfor %}
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control" name="idAnimalModal" id="idAnimalModal" readonly value="">
-                                            {% for animal in animales %}
-            
-                                            <option value="{{animal.0}}">{{animal.2}}</option>
-            
-                                            {% endfor %}
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="date" class="form-control" name="corralFechaModal" id="corralFechaModal" value="">
-                                    </td>
-                                    <td>
-                                        <input type="date" class="form-control" name="corralFechaFinModal" id="corralFechaFinModal" value="">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-info add-new"><i class="fa fa-plus"></i>Actualizar</button>
-                                    </td>
-                                </tr>
+                                        <option value="{{corral.0}}">{{corral.1}}</option>
+
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" name="idAnimalModal" id="idAnimalModal" readonly
+                                        value="">
+                                        {% for animal in animales %}
+
+                                        <option value="{{animal.0}}">{{animal.2}}</option>
+
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="date" class="form-control" name="corralFechaModal"
+                                        id="corralFechaModal" value="">
+                                </td>
+                                <td>
+                                    <input type="date" class="form-control" name="corralFechaFinModal"
+                                        id="corralFechaFinModal" value="">
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-info add-new"><i
+                                            class="fa fa-plus"></i>Actualizar</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </form>

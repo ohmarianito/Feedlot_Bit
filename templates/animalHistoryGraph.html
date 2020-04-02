@@ -3,27 +3,82 @@
 
 
 {% block head %}
-<style type="text/css"></style>
+<style type="text/css">
+    .tableDetail{
+        text-align: left;
+        font-weight:bold;
+    }
+
+    .tableDetailRigth{
+        text-align: initial;
+    }
+
+</style>
 {% endblock %}
 
 
 {% block body %}
+
 <div class="container">
-    <!-- LOS COLORES ESTAN PARA IDENTIFICAR LOS DIV SE PUEDEN SACAR HAY Q SACARLOS DESPUES-->
-    <div class="container-fluid" style="margin-top: 2%;">
-        <div class="row" style="background-color:lavender;">
-            <div class="col-md-6 text-center" style="background-color:lightgray; margin-top: 6%;">
-                <label for="staticId" class="">Nombre animal: Martin</label><br>
-                <label for="staticId" class="">Edad: 35 meses</label><br>
-                <label for="staticId" class="">Peso: 105kg</label><br>
-                <label for="staticId" class="">Origen: de lo profundo</label><br>
-                <label for="staticId" class="">Sexo: M/F</label><br>
-                <label for="staticId" class="">Fecha caducidad: jugando los descuentos</label><br>
-            </div>
-            <div class="col-sm-5 col-sm-offset-2 col-md-6 col-md-offset-0" style="background-color:lightcyan;">
-                <img src=" {{ url_for('static', filename='grafica.png') }} " alt="Historia del animal">
+    <div class="table-title">
+        <div class="row">
+            <div style="text-align: center" class="">
+                <h1 style="font-weight: bold;">Detalle del animal</h1>
             </div>
         </div>
     </div>
+    <!-- LOS COLORES ESTAN PARA IDENTIFICAR LOS DIV SE PUEDEN SACAR HAY Q SACARLOS DESPUES-->
+    {% for detail in details %}
+        <div class="container-fluid" style="margin-top: 2%;">
+            <div class="row" style="background-color:lavender;">
+                <div class="col-md-6 text-center" style="background-color:lightgray; margin-top: 6%;">
+                <table class="table">
+                  <thead>
+                    <tr style="text-align:right">
+                      <th>Campo:</th>
+                      <th style="width: 50% !important;">Informacion:</th>
+                    </tr>
+                  </thead>
+                  <tbody>     
+                    <tr class="success">
+                      <td class="tableDetail">Identificador:</td>
+                      <td class="tableDetailRigth">{{detail.0}}</td>
+                    </tr>
+                    <tr class="danger">
+                      <td class="tableDetail">Tipo animal:</td>
+                      <td class="tableDetailRigth">{{detail.1}}</td>
+                    </tr>
+                    <tr class="info">
+                      <td class="tableDetail">Fecha compra:</td>
+                      <td class="tableDetailRigth">{{detail.2}}</td>
+                    </tr>
+                    <tr class="warning">
+                      <td class="tableDetail">Precio compra:</td>
+                      <td class="tableDetailRigth">{{detail.3}}</td>
+                    </tr>
+                    <tr class="active">
+                      <td class="tableDetail">Corral:</td>
+                      <td class="tableDetailRigth">{{detail.4}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+                <div class="col-sm-5 col-sm-offset-2 col-md-6 col-md-offset-0">
+                    <img src=" {{ url_for('static', filename='grafica.png') }} " alt="Historia del animal">
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}

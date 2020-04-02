@@ -21,7 +21,7 @@ def makeGraph():
 
     plt.ylabel('Peso en kg')
     plt.xlabel('Edad en meses')
-    plt.title('Historial del animal')
+    plt.title('Historial engorde del animal')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()

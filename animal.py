@@ -31,7 +31,7 @@ def animalInicio():
 
 def animalAdd(identificador, tipoAnimal):
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO animal (animalId, tipoAnimalId)  VALUES (%s, %s)",
+    cur.execute("INSERT INTO animal (animalIdInt, tipoAnimalId)  VALUES (%s, %s)",
                 (identificador, tipoAnimal))
     mysql.connection.commit()
     cur.close()
